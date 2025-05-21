@@ -1,0 +1,13 @@
+[Unit]
+Description=gunicorn daemon for CallQualityHub
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/callqualityhub
+ExecStart=/var/www/callqualityhub/env/bin/gunicorn --workers 4 --bind unix:/var/www/callqualityhub/gunicorn.sock call_quality_hub.wsgi:application
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target 

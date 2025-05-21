@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{{ title }}</h1>
+        <div>
+            <a href="{% url 'calls:call_detail' evaluation.call.id %}" class="text-blue-600 hover:text-blue-800">
+                Çağrı Detayına Dön
+            </a>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Değerlendirme Özeti -->
+        <div class="md:col-span-1">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+                <div class="p-4 bg-blue-50 border-b border-blue-100">
+                    <h2 class="text-lg font-semibold text-blue-800">Değerlendirme Özeti</h2>
+                </div>
+                <div class="p-6">
+                    <!-- Toplam Puan -->
+                    <div class="text-center mb-6">
+                        <div class="text-5xl font-bold {% if evaluation.total_score >= 80 %}text-green-600{% elif evaluation.total_score >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                            {{ evaluation.total_score|floatformat:1 }}%
+                        </div>
+                        <div class="text-sm text-gray-500 mt-2">Toplam Puan</div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <span class="font-semibold">Değerlendiren:</span>
+                            <span>{{ evaluation.evaluator.get_full_name }}</span>
+                        </div>
+                        <div>
+                            <span class="font-semibold">Müşteri Temsilcisi:</span>
+                            <span>{{ evaluation.call.agent.get_full_name }}</span>
+                        </div>
+                        <div>
+                            <span class="font-semibold">Değerlendirme Tarihi:</span>
+                            <span>{{ evaluation.evaluated_at|date:"d.m.Y H:i" }}</span>
+                        </div>
+                        <div>
+                            <span class="font-semibold">Çağrı Tarihi:</span>
+                            <span>{{ evaluation.call.call_date|date:"d.m.Y H:i" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ses Oynatıcı -->
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-4 bg-blue-50 border-b border-blue-100">
+                    <h2 class="text-lg font-semibold text-blue-800">Ses Kaydı</h2>
+                </div>
+                <div class="p-4">
+                    <audio controls class="w-full">
+                        <source src="{{ evaluation.call.audio_file.url }}" type="audio/mpeg">
+                        Tarayıcınız ses etiketi özelliğini desteklemiyor.
+                    </audio>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Değerlendirme Detayları -->
+        <div class="md:col-span-2">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-4 bg-blue-50 border-b border-blue-100">
+                    <h2 class="text-lg font-semibold text-blue-800">Değerlendirme Detayları</h2>
+                </div>
+                
+                <div class="p-6 space-y-8">
+                    <!-- Değerlendirme Notu -->
+                    <div>
+                        <h3 class="text-md font-semibold mb-3">Değerlendirme Notu</h3>
+                        <div class="bg-gray-50 p-4 rounded-md">
+                            <p>{{ evaluation.final_note }}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Puanlama Detayları -->
+                    <div>
+                        <h3 class="text-md font-semibold mb-3">Puanlama Detayları</h3>
+                        <div class="space-y-4">
+                            {% for field_id, data in evaluation.scores.items %}
+                            <div class="border-b pb-4 last:border-b-0 last:pb-0">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="font-medium">{{ data.label }}</span>
+                                    <div class="text-right">
+                                        <span class="font-bold {% if data.score == data.max_score %}text-green-600{% elif data.score >= data.max_score|floatformat:0|divisibleby:2 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                                            {{ data.score }} / {{ data.max_score }}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <!-- İlerleme Çubuğu -->
+                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                    <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ data.score|floatformat:0 }}%"></div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

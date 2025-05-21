@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-6">{{ title }}</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Çağrı Bilgileri ve Ses Oynatıcı -->
+        <div class="md:col-span-1">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+                <div class="p-4 bg-blue-50 border-b border-blue-100">
+                    <h2 class="text-lg font-semibold text-blue-800">Çağrı Bilgileri</h2>
+                </div>
+                <div class="p-4 space-y-3">
+                    <div>
+                        <span class="font-semibold">Müşteri Temsilcisi:</span>
+                        <span>{{ call.agent.get_full_name }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Çağrı Kuyruğu:</span>
+                        <span>{{ call.call_queue.name }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Telefon Numarası:</span>
+                        <span>{{ call.phone_number }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Çağrı Tarihi:</span>
+                        <span>{{ call.call_date }}</span>
+                    </div>
+                </div>
+                <div class="p-4 border-t border-gray-200">
+                    <h3 class="text-md font-semibold mb-3">Ses Kaydı</h3>
+                    <audio controls class="w-full">
+                        <source src="{{ call.audio_file.url }}" type="audio/mpeg">
+                        Tarayıcınız ses etiketi özelliğini desteklemiyor.
+                    </audio>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Değerlendirme Formu -->
+        <div class="md:col-span-2">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-4 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-blue-800">Değerlendirme</h2>
+                    <div id="totalScoreBox" class="text-right">
+                        <span class="text-2xl font-bold text-blue-700" id="totalScore">100</span>
+                        <span class="text-gray-600">/ 100</span>
+                    </div>
+                </div>
+                <form id="evaluationForm" class="p-6">
+                    <div id="formError" class="hidden mb-4 p-4 bg-red-100 text-red-700 rounded-md"></div>
+                    <div id="formSuccess" class="hidden mb-4 p-4 bg-green-100 text-green-700 rounded-md"></div>
+                    
+                    <!-- Dinamik form alanları buraya gelecek -->
+                    <div id="dynamicFields" class="space-y-6"></div>
+                    
+                    <div class="border-t pt-4 mt-6">
+                        <label for="final_note" class="block font-medium text-gray-700 mb-2">Değerlendirme Notu</label>
+                        <textarea id="final_note" name="final_note" rows="5" class="w-full p-2 border rounded-md" required></textarea>
+                    </div>
+                    
+                    <div class="flex justify-between mt-6 pt-4 border-t border-gray-200">
+                        <button type="button" id="clearBtn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300">
+                            Temizle
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                            Kaydet
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const callId = {{ call.id }};
+    let formId = null;
+    let formFields = {};
+    let maxTotal = 100;
+    let fieldOrder = [];
+    const evaluationForm = document.getElementById('evaluationForm');
+    const formError = document.getElementById('formError');
+    const formSuccess = document.getElementById('formSuccess');
+    const totalScoreBox = document.getElementById('totalScore');
+    
+    // Form alanlarını yükle
+    fetch('/api/evaluation-forms/')
+        .then(response => response.json())
+        .then(data => {
+            let form = null;
+            if (data.results && data.results.length > 0) {
+                form = data.results[0];
+            } else if (Array.isArray(data) && data.length > 0) {
+                form = data[0];
+            }
+            if (form) {
+                formId = form.id;
+                formFields = form.fields;
+                fieldOrder = Object.keys(formFields);
+                maxTotal = Object.values(formFields).reduce((acc, f) => acc + (f.max_score || 0), 0);
+                renderForm(formFields);
+                updateTotalScore();
+            } else {
+                showError('Değerlendirme formu bulunamadı.');
+            }
+        })
+        .catch(error => {
+            console.error('Form yükleme hatası:', error);
+            showError('Form yüklenirken bir hata oluştu.');
+        });
+    
+    // Form alanlarını oluştur
+    function renderForm(fields) {
+        const container = document.getElementById('dynamicFields');
+        container.innerHTML = '';
+        
+        Object.entries(fields).forEach(([fieldId, field]) => {
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'mb-6';
+            
+            const label = document.createElement('label');
+            label.className = 'block font-medium text-gray-700 mb-2';
+            label.htmlFor = `score_${fieldId}`;
+            label.textContent = field.label;
+            
+            const sliderWrapper = document.createElement('div');
+            sliderWrapper.className = 'flex items-center space-x-4';
+            
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.id = `score_${fieldId}`;
+            slider.name = `score_${fieldId}`;
+            slider.min = 0;
+            slider.max = field.max_score;
+            slider.value = field.max_score;
+            slider.className = 'w-2/3 accent-blue-600';
+            slider.required = true;
+            slider.addEventListener('input', updateTotalScore);
+            
+            const valueBox = document.createElement('span');
+            valueBox.id = `value_${fieldId}`;
+            valueBox.className = 'ml-2 font-semibold text-blue-700';
+            valueBox.textContent = field.max_score;
+            slider.addEventListener('input', function() {
+                valueBox.textContent = slider.value;
+            });
+            
+            sliderWrapper.appendChild(slider);
+            sliderWrapper.appendChild(valueBox);
+            sliderWrapper.appendChild(document.createTextNode(` / ${field.max_score}`));
+            fieldDiv.appendChild(label);
+            fieldDiv.appendChild(sliderWrapper);
+            container.appendChild(fieldDiv);
+        });
+    }
+    
+    // Toplam puanı güncelle
+    function updateTotalScore() {
+        let total = 0;
+        fieldOrder.forEach(fieldId => {
+            const slider = document.getElementById(`score_${fieldId}`);
+            total += parseInt(slider.value) || 0;
+        });
+        totalScoreBox.textContent = total;
+    }
+    
+    // Form gönderme
+    evaluationForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const scores = {};
+        fieldOrder.forEach(fieldId => {
+            const slider = document.getElementById(`score_${fieldId}`);
+            const field = formFields[fieldId];
+            scores[fieldId] = {
+                score: parseInt(slider.value) || 0,
+                max_score: field.max_score,
+                label: field.label
+            };
+        });
+        
+        const finalNote = document.getElementById('final_note').value;
+        
+        const payload = {
+            call: callId,
+            form: formId,
+            scores: scores,
+            final_note: finalNote
+        };
+        
+        fetch('/api/evaluations/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify(payload)
+        })
+        .then(response => response.json().then(data => ({ status: response.status, data })))
+        .then(({ status, data }) => {
+            if (status === 201) {
+                window.location.href = `/calls/${callId}/?success=true`;
+            } else {
+                showError(data.detail || 'Değerlendirme kaydedilirken bir hata oluştu.');
+            }
+        })
+        .catch(error => {
+            console.error('Gönderme hatası:', error);
+            showError('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+        });
+    });
+    
+    // Formu temizle
+    document.getElementById('clearBtn').addEventListener('click', function() {
+        fieldOrder.forEach(fieldId => {
+            const slider = document.getElementById(`score_${fieldId}`);
+            const field = formFields[fieldId];
+            slider.value = field.max_score;
+            document.getElementById(`value_${fieldId}`).textContent = field.max_score;
+        });
+        document.getElementById('final_note').value = '';
+        updateTotalScore();
+        hideMessages();
+    });
+    
+    // Hata mesajı göster
+    function showError(message) {
+        formError.textContent = message;
+        formError.classList.remove('hidden');
+        formSuccess.classList.add('hidden');
+    }
+    
+    // Başarı mesajı göster
+    function showSuccess(message) {
+        formSuccess.textContent = message;
+        formSuccess.classList.remove('hidden');
+        formError.classList.add('hidden');
+    }
+    
+    // Mesajları gizle
+    function hideMessages() {
+        formError.classList.add('hidden');
+        formSuccess.classList.add('hidden');
+    }
+});
+</script>
+{% endblock %} 

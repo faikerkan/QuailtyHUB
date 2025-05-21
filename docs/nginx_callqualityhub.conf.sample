@@ -1,0 +1,37 @@
+server {
+    listen 80;
+    server_name callqualityhub.domain.com www.callqualityhub.domain.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name callqualityhub.domain.com www.callqualityhub.domain.com;
+
+    ssl_certificate /etc/letsencrypt/live/callqualityhub.domain.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/callqualityhub.domain.com/privkey.pem;
+
+    client_max_body_size 20M;  # Büyük ses dosyaları için
+
+    location = /favicon.ico { 
+        access_log off; 
+        log_not_found off; 
+    }
+
+    location /static/ {
+        alias /var/www/callqualityhub/staticfiles/;
+        expires 30d;
+        add_header Cache-Control "public, max-age=2592000";
+    }
+
+    location /media/ {
+        alias /var/www/callqualityhub/media/;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/var/www/callqualityhub/gunicorn.sock;
+        proxy_connect_timeout 300s;
+        proxy_read_timeout 300s;
+    }
+} 

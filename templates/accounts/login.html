@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Giriş Yap - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <h1 class="text-2xl font-bold text-center mb-6">Giriş Yap</h1>
+    
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %} rounded-md">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="post" id="login-form" class="bg-white shadow-md rounded-lg p-6">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="id_username" class="block text-gray-700 text-sm font-bold mb-2">
+                Kullanıcı Adı
+            </label>
+            <input id="id_username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Kullanıcı Adı">
+            {% if form.username.errors %}
+            <p class="text-red-500 text-xs italic mt-1">{{ form.username.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="mb-6">
+            <label for="id_password" class="block text-gray-700 text-sm font-bold mb-2">
+                Şifre
+            </label>
+            <input id="id_password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Şifre">
+            {% if form.password.errors %}
+            <p class="text-red-500 text-xs italic mt-1">{{ form.password.errors.0 }}</p>
+            {% endif %}
+        </div>
+        
+        <div class="flex items-center justify-between">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Giriş Yap
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %} 

@@ -1,0 +1,90 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.10, pytest-8.3.5, pluggy-1.6.0 -- /Users/faikerkangursen/Desktop/QualityHUB/.venv/bin/python
+cachedir: .pytest_cache
+django: version: 4.2.21, settings: call_quality_hub.settings (from env)
+rootdir: /Users/faikerkangursen/Desktop/QualityHUB
+plugins: django-4.11.1
+collecting ... collected 2 items
+
+tests/test_api_end_to_end.py::test_api_end_to_end FAILED                 [ 50%]
+
+=================================== FAILURES ===================================
+_____________________________ test_api_end_to_end ______________________________
+
+    @pytest.mark.django_db
+    def test_api_end_to_end():
+        EvaluationForm.objects.all().delete()
+        client = APIClient()
+        admin = CustomUser.objects.create_user(username='admin', password='admin123', role='admin', is_superuser=True, is_staff=True)
+        expert = CustomUser.objects.create_user(username='kalitetest', password='kalite123', role='expert')
+        agent = CustomUser.objects.create_user(username='agenttest', password='agent123', role='agent')
+        queue = CallQueue.objects.create(name="Satış")
+    
+        # Admin login
+        client.login(username='admin', password='admin123')
+    
+        # Değerlendirme formu oluştur
+        form_data = {
+            "name": "Standart Değerlendirme",
+            "fields": [
+                {"key": "greeting", "label": "Selamlama", "type": "number", "max_score": 10},
+                {"key": "problem_solving", "label": "Çözüm Üretme", "type": "number", "max_score": 20}
+            ]
+        }
+        response = client.post("/api/evaluation-forms/", form_data, format='json')
+        assert response.status_code == 201
+        form_id = response.data.get('id') or response.data.get('pk')
+    
+        # Kalite uzmanı login
+        client.logout()
+        client.login(username='kalitetest', password='kalite123')
+    
+        # Çağrı kaydı yükle
+        import io
+        audio = io.BytesIO(b"file_content")
+        audio.name = "test.mp3"
+        call_data = {
+            "agent": agent.id,
+            "call_queue": queue.id,
+            "phone_number": "5551234567",
+            "call_date": datetime.datetime.now().isoformat(),
+            "audio_file": audio
+        }
+        response = client.post("/api/calls/upload/", call_data, format='multipart')
+        assert response.status_code in [200, 201]
+        call_id = response.data.get('id') or response.data.get('pk')
+    
+        # Değerlendirme ekle
+        eval_data = {
+            "call": call_id,
+            "form": form_id,
+            "scores": {"greeting": 8, "problem_solving": 18},
+            "final_note": "Başarılı iletişim"
+        }
+        response = client.post("/api/evaluations/", eval_data, format='json')
+        assert response.status_code in [200, 201]
+    
+        # Agent login ve çağrılarını görüntüle
+        client.logout()
+        client.login(username='agenttest', password='agent123')
+        response = client.get("/api/calls/")
+        assert response.status_code == 200
+>       assert any("test.mp3" in c.get('audio_file', '') for c in response.data)
+
+tests/test_api_end_to_end.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <dict_keyiterator object at 0x104963d30>
+
+>   assert any("test.mp3" in c.get('audio_file', '') for c in response.data)
+E   AttributeError: 'str' object has no attribute 'get'
+
+tests/test_api_end_to_end.py:65: AttributeError
+---------------------------- Captured stderr setup -----------------------------
+Creating test database for alias 'default'...
+--------------------------- Captured stderr teardown ---------------------------
+Destroying test database for alias 'default'...
+=========================== short test summary info ============================
+FAILED tests/test_api_end_to_end.py::test_api_end_to_end - AttributeError: 's...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+============================== 1 failed in 0.65s ===============================

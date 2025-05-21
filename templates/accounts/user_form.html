@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">{{ title }}</h1>
+    
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %} rounded-md">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="{{ form.username.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.username.label }}
+                        </label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.username.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.email.label }}
+                        </label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.email.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.first_name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.first_name.label }}
+                        </label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.first_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.last_name.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.last_name.label }}
+                        </label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.last_name.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.role.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.role.label }}
+                        </label>
+                        {{ form.role }}
+                        {% if form.role.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.role.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    {% if form.is_active %}
+                    <div class="flex items-center">
+                        <div class="form-check">
+                            {{ form.is_active }}
+                            <label for="{{ form.is_active.id_for_label }}" class="inline-block text-gray-700 text-sm font-bold ml-2">
+                                Aktif
+                            </label>
+                        </div>
+                        {% if form.is_active.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.is_active.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    
+                    {% if form.password1 %}
+                    <div class="md:col-span-2">
+                        <label for="{{ form.password1.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.password1.label }}
+                        </label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.password1.errors.0 }}</p>
+                        {% endif %}
+                        {% if form.password1.help_text %}
+                        <p class="text-gray-500 text-xs mt-1">{{ form.password1.help_text }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.password2.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.password2.label }}
+                        </label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.password2.errors.0 }}</p>
+                        {% endif %}
+                        {% if form.password2.help_text %}
+                        <p class="text-gray-500 text-xs mt-1">{{ form.password2.help_text }}</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Kaydet
+                    </button>
+                    <a href="{% url 'accounts:user_list' %}" class="text-blue-600 hover:text-blue-800">
+                        İptal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

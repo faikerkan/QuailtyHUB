@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Değerlendirmelerim - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">Değerlendirmelerim</h1>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Tarih</th>
+                        <th class="py-3 px-4 text-left">Müşteri Temsilcisi</th>
+                        <th class="py-3 px-4 text-left">Çağrı Tarihi</th>
+                        <th class="py-3 px-4 text-left">Puan</th>
+                        <th class="py-3 px-4 text-left">Not</th>
+                        <th class="py-3 px-4 text-left">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% if evaluations %}
+                        {% for evaluation in evaluations %}
+                        <tr>
+                            <td class="py-4 px-4">{{ evaluation.evaluated_at|date:"d.m.Y H:i" }}</td>
+                            <td class="py-4 px-4">{{ evaluation.call.agent.get_full_name }}</td>
+                            <td class="py-4 px-4">{{ evaluation.call.call_date|date:"d.m.Y H:i" }}</td>
+                            <td class="py-4 px-4">{{ evaluation.total_score|floatformat:1 }}</td>
+                            <td class="py-4 px-4">{{ evaluation.final_note|truncatechars:40 }}</td>
+                            <td class="py-4 px-4">
+                                <a href="{% url 'calls:evaluation_detail' evaluation.id %}" class="text-blue-600 hover:text-blue-900">Detay</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr class="text-gray-500">
+                            <td class="py-4 px-4 text-center" colspan="6">Henüz değerlendirme yapılmamıştır.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+        {% if evaluations.has_other_pages %}
+        <div class="mt-4 flex justify-center">
+            <nav class="inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                {% if evaluations.has_previous %}
+                <a href="?page={{ evaluations.previous_page_number }}" class="px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Önceki</a>
+                {% endif %}
+                <span class="px-3 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-gray-700">{{ evaluations.number }} / {{ evaluations.paginator.num_pages }}</span>
+                {% if evaluations.has_next %}
+                <a href="?page={{ evaluations.next_page_number }}" class="px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">Sonraki</a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

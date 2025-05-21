@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}CallQualityHub{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/dist/styles.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-700 text-white shadow-md">
+        <nav class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div>
+                <a href="/" class="text-2xl font-bold">CallQualityHub</a>
+            </div>
+            <div class="flex items-center space-x-4">
+                {% if user.is_authenticated %}
+                    <span class="hidden md:inline">Merhaba, {{ user.get_full_name|default:user.username }}</span>
+                    <div class="relative group">
+                        <button class="flex items-center px-3 py-2 bg-blue-800 rounded-md hover:bg-blue-900">
+                            <span>Hesap</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 py-2 bg-white rounded-md shadow-xl hidden group-hover:block z-10">
+                            <a href="{% url 'accounts:profile' %}" class="block px-4 py-2 text-gray-800 hover:bg-blue-100">Profil</a>
+                            <a href="{% url 'accounts:password_change' %}" class="block px-4 py-2 text-gray-800 hover:bg-blue-100">Şifre Değiştir</a>
+                            <div class="border-t border-gray-200 my-1"></div>
+                            <a href="{% url 'accounts:logout' %}" class="block px-4 py-2 text-gray-800 hover:bg-blue-100">Çıkış Yap</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}" class="px-3 py-2 bg-blue-800 rounded-md hover:bg-blue-900">Giriş Yap</a>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <!-- Sidebar and Main Content -->
+    <div class="container mx-auto px-4 py-8 flex flex-col md:flex-row">
+        {% if user.is_authenticated %}
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 bg-white rounded-lg shadow-md p-4 mb-6 md:mb-0 md:mr-6">
+            <h2 class="text-lg font-semibold border-b pb-2 mb-2">Menü</h2>
+            <ul class="space-y-2">
+                <li><a href="/" class="block p-2 rounded hover:bg-gray-100">Ana Sayfa</a></li>
+                <li><a href="{% url 'calls:call_list' %}" class="block p-2 rounded hover:bg-gray-100">Çağrı Kayıtları</a></li>
+                
+                {% if user.is_admin or user.is_superuser %}
+                <li class="border-t pt-2 mt-2">
+                    <h3 class="font-medium text-gray-500 pb-1">Yönetici</h3>
+                    <ul class="pl-2 space-y-1">
+                        <li><a href="{% url 'accounts:user_list' %}" class="block p-2 rounded hover:bg-gray-100">Kullanıcı Yönetimi</a></li>
+                        <li><a href="#" class="block p-2 rounded hover:bg-gray-100">Form Yönetimi</a></li>
+                        <li><a href="#" class="block p-2 rounded hover:bg-gray-100">Raporlar</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                
+                {% if user.is_expert %}
+                <li class="border-t pt-2 mt-2">
+                    <h3 class="font-medium text-gray-500 pb-1">Kalite Uzmanı</h3>
+                    <ul class="pl-2 space-y-1">
+                        <li><a href="{% url 'calls:call_upload' %}" class="block p-2 rounded hover:bg-gray-100">Çağrı Yükle</a></li>
+                        <li><a href="{% url 'calls:call_list' %}" class="block p-2 rounded hover:bg-gray-100">Değerlendirmelerim</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                
+                {% if user.is_agent %}
+                <li class="border-t pt-2 mt-2">
+                    <h3 class="font-medium text-gray-500 pb-1">Müşteri Temsilcisi</h3>
+                    <ul class="pl-2 space-y-1">
+                        <li><a href="{% url 'calls:call_list' %}" class="block p-2 rounded hover:bg-gray-100">Değerlendirmelerim</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+            </ul>
+        </aside>
+        {% endif %}
+
+        <!-- Main Content -->
+        <main class="flex-1 bg-white rounded-lg shadow-md p-6">
+            {% block content %}
+            <div class="text-center py-12">
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">CallQualityHub'a Hoş Geldiniz</h1>
+                <p class="text-gray-600 mb-8">Çağrı merkezi kalite değerlendirme sistemine erişim için lütfen giriş yapın.</p>
+                <a href="{% url 'accounts:login' %}" class="px-5 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">Giriş Yap</a>
+            </div>
+            {% endblock %}
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-6 mt-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p>&copy; 2025 CallQualityHub. Tüm hakları saklıdır.</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="#" class="hover:text-blue-300">Hakkında</a>
+                    <a href="#" class="hover:text-blue-300">Gizlilik</a>
+                    <a href="#" class="hover:text-blue-300">İletişim</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    {% block extra_body %}{% endblock %}
+</body>
+</html> 

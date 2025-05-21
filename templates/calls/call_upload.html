@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-2xl font-bold mb-6">{{ title }}</h1>
+    
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %} rounded-md">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="p-6">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="{{ form.agent.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.agent.label }}
+                        </label>
+                        {{ form.agent }}
+                        {% if form.agent.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.agent.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.call_queue.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.call_queue.label }}
+                        </label>
+                        {{ form.call_queue }}
+                        {% if form.call_queue.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.call_queue.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.phone_number.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.phone_number.label }}
+                        </label>
+                        {{ form.phone_number }}
+                        {% if form.phone_number.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.phone_number.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.call_date.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.call_date.label }}
+                        </label>
+                        {{ form.call_date }}
+                        {% if form.call_date.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.call_date.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="md:col-span-2">
+                        <label for="{{ form.audio_file.id_for_label }}" class="block text-gray-700 text-sm font-bold mb-2">
+                            {{ form.audio_file.label }}
+                        </label>
+                        {{ form.audio_file }}
+                        <p class="text-gray-500 text-xs mt-1">MP3 formatında ses dosyası yükleyin.</p>
+                        {% if form.audio_file.errors %}
+                        <p class="text-red-500 text-xs italic mt-1">{{ form.audio_file.errors.0 }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                        Çağrı Kaydını Yükle ve Değerlendir
+                    </button>
+                    <a href="{% url 'calls:call_list' %}" class="text-blue-600 hover:text-blue-800">
+                        İptal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %} 

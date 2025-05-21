@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+
+{% block title %}Detaylı Raporlar - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-8">
+    <!-- Django messages -->
+    {% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+        <div class="p-4 rounded mb-2 {% if message.tags == 'error' %}bg-red-100 text-red-800 border border-red-200{% elif message.tags == 'success' %}bg-green-100 text-green-800 border border-green-200{% else %}bg-blue-100 text-blue-800 border border-blue-200{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">Detaylı Raporlar & Analiz</h1>
+    <!-- Filtreler -->
+    <form method="get" class="mb-10 grid grid-cols-1 md:grid-cols-5 gap-4 sticky top-4 z-10 bg-gray-50 p-4 rounded-lg shadow border border-gray-200" id="filterForm">
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Başlangıç Tarihi</label>
+            <input type="date" name="start_date" value="{{ start_date }}" class="form-input w-full rounded border-gray-300" />
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Bitiş Tarihi</label>
+            <input type="date" name="end_date" value="{{ end_date }}" class="form-input w-full rounded border-gray-300" />
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Müşteri Temsilcisi</label>
+            <select name="agent" class="form-select w-full rounded border-gray-300">
+                <option value="">Tümü</option>
+                {% for agent in agents %}
+                <option value="{{ agent.id }}" {% if selected_agent == agent.id %}selected{% endif %}>{{ agent.get_full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Kalite Uzmanı</label>
+            <select name="expert" class="form-select w-full rounded border-gray-300">
+                <option value="">Tümü</option>
+                {% for expert in experts %}
+                <option value="{{ expert.id }}" {% if selected_expert == expert.id %}selected{% endif %}>{{ expert.get_full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Çağrı Kuyruğu</label>
+            <select name="queue" class="form-select w-full rounded border-gray-300">
+                <option value="">Tümü</option>
+                {% for queue in queues %}
+                <option value="{{ queue.id }}" {% if selected_queue == queue.id %}selected{% endif %}>{{ queue.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="md:col-span-5 flex justify-end gap-2 mt-2">
+            <button id="filterBtn" type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+                <span id="filterBtnText">Filtrele</span>
+                <svg id="filterSpinner" class="hidden animate-spin h-5 w-5 ml-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg>
+            </button>
+            <a href="?" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                Temizle
+            </a>
+        </div>
+    </form>
+    <!-- Aktif Filtreler Özeti -->
+    {% if start_date or end_date or selected_agent or selected_expert or selected_queue %}
+    <div class="mb-6 bg-blue-50 border border-blue-200 rounded p-3 flex flex-wrap gap-3 items-center text-sm">
+        <span class="font-semibold text-blue-700">Aktif Filtreler:</span>
+        {% if start_date %}<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Başlangıç: {{ start_date }}</span>{% endif %}
+        {% if end_date %}<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Bitiş: {{ end_date }}</span>{% endif %}
+        {% if selected_agent %}
+            {% for agent in agents %}{% if agent.id == selected_agent %}<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Temsilci: {{ agent.get_full_name }}</span>{% endif %}{% endfor %}
+        {% endif %}
+        {% if selected_expert %}
+            {% for expert in experts %}{% if expert.id == selected_expert %}<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Uzman: {{ expert.get_full_name }}</span>{% endif %}{% endfor %}
+        {% endif %}
+        {% if selected_queue %}
+            {% for queue in queues %}{% if queue.id == selected_queue %}<span class="bg-blue-100 text-blue-700 px-2 py-1 rounded">Kuyruk: {{ queue.name }}</span>{% endif %}{% endfor %}
+        {% endif %}
+    </div>
+    {% endif %}
+    <!-- Operasyonel Özet -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-10">
+        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500 flex items-center gap-4">
+            <span class="bg-blue-100 text-blue-600 rounded-full p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 018 0v2M12 7a4 4 0 110-8 4 4 0 010 8z" /></svg>
+            </span>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700 mb-1">Toplam Değerlendirme</h3>
+                <p class="text-3xl font-bold text-blue-600">{{ total_evals }}</p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500 flex items-center gap-4">
+            <span class="bg-green-100 text-green-600 rounded-full p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm0 10c-4.418 0-8-1.79-8-4V6c0-2.21 3.582-4 8-4s8 1.79 8 4v8c0 2.21-3.582 4-8 4z" /></svg>
+            </span>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700 mb-1">Ortalama Puan</h3>
+                <p class="text-3xl font-bold text-green-600">{{ avg_score }}</p>
+            </div>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500 flex items-center gap-4">
+            <span class="bg-purple-100 text-purple-600 rounded-full p-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" /></svg>
+            </span>
+            <div>
+                <h3 class="text-lg font-semibold text-gray-700 mb-1">En Aktif Temsilci</h3>
+                <p class="text-lg font-bold text-purple-600">{% if most_active_agent %}{{ most_active_agent.call__agent__first_name }} {{ most_active_agent.call__agent__last_name }} ({{ most_active_agent.total }}){% else %}-{% endif %}</p>
+            </div>
+        </div>
+    </div>
+    <!-- Son 7 Gün Değerlendirme Grafiği -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-10">
+        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 17l6-6 4 4 8-8" /></svg>
+            Son 7 Gün Değerlendirme Trendi
+        </h2>
+        <div class="w-full overflow-x-auto">
+            {% if evals_chart|sum > 0 %}
+            <canvas id="evalsChart" height="80"></canvas>
+            {% else %}
+            <div class="flex flex-col items-center justify-center py-8 text-gray-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 018 0v2M12 7a4 4 0 110-8 4 4 0 010 8z" /></svg>
+                Son 7 güne ait değerlendirme verisi bulunamadı.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Temsilci Performansı Tablosu -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-10">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Müşteri Temsilcisi Performansı</h2>
+        <div class="mb-4 flex flex-col sm:flex-row gap-2 items-start sm:items-center justify-between">
+            <input id="agentSearch" type="text" placeholder="Temsilci ara..." class="form-input w-full sm:w-64 rounded border-gray-300" />
+            <span class="text-xs text-gray-400">Başlıklara tıklayarak sıralayabilirsiniz</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table id="agentTable" class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('agentTable', 0)">Temsilci</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('agentTable', 1)">Toplam Değerlendirme</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('agentTable', 2)">Ortalama Puan</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('agentTable', 3)">En Yüksek</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('agentTable', 4)">En Düşük</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('agentTable', 5)">Son Değerlendirme</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for stat in agent_stats %}
+                    <tr class="hover:bg-blue-50 transition-colors">
+                        <td class="py-4 px-4">
+                            <a href="/admin/accounts/customuser/{{ stat.call__agent__id }}/" target="_blank" class="text-blue-700 hover:underline flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                {{ stat.call__agent__first_name }} {{ stat.call__agent__last_name }}
+                            </a>
+                        </td>
+                        <td class="py-4 px-4">{{ stat.total }}</td>
+                        <td class="py-4 px-4">{{ stat.avg_score|floatformat:1 }}</td>
+                        <td class="py-4 px-4">{{ stat.max_score|floatformat:1 }}</td>
+                        <td class="py-4 px-4">{{ stat.min_score|floatformat:1 }}</td>
+                        <td class="py-4 px-4">{{ stat.last_eval|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr class="text-gray-500 bg-gray-50">
+                        <td class="py-4 px-4 text-center" colspan="6">
+                            <div class="flex flex-col items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 018 0v2M12 7a4 4 0 110-8 4 4 0 010 8z" /></svg>
+                                Veri yok. Seçili filtrelerle eşleşen değerlendirme bulunamadı.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Kalite Uzmanı Performansı Tablosu -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-10">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Kalite Uzmanı Performansı</h2>
+        <div class="mb-4 flex flex-col sm:flex-row gap-2 items-start sm:items-center justify-between">
+            <input id="expertSearch" type="text" placeholder="Uzman ara..." class="form-input w-full sm:w-64 rounded border-gray-300" />
+            <span class="text-xs text-gray-400">Başlıklara tıklayarak sıralayabilirsiniz</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table id="expertTable" class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('expertTable', 0)">Kalite Uzmanı</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('expertTable', 1)">Toplam Değerlendirme</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('expertTable', 2)">Ortalama Puan</th>
+                        <th class="py-3 px-4 text-left cursor-pointer" onclick="sortTable('expertTable', 3)">Son Değerlendirme</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for stat in expert_stats %}
+                    <tr class="hover:bg-green-50 transition-colors">
+                        <td class="py-4 px-4">
+                            <a href="/admin/accounts/customuser/{{ stat.evaluator__id }}/" target="_blank" class="text-green-700 hover:underline flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                {{ stat.evaluator__first_name }} {{ stat.evaluator__last_name }}
+                            </a>
+                        </td>
+                        <td class="py-4 px-4">{{ stat.total }}</td>
+                        <td class="py-4 px-4">{{ stat.avg_score|floatformat:1 }}</td>
+                        <td class="py-4 px-4">{{ stat.last_eval|date:"d.m.Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr class="text-gray-500 bg-gray-50">
+                        <td class="py-4 px-4 text-center" colspan="4">
+                            <div class="flex flex-col items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" /></svg>
+                                Veri yok. Seçili filtrelerle eşleşen değerlendirme bulunamadı.
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script id="evals-chart-labels" type="application/json">{{ evals_chart_labels|safe }}</script>
+<script id="evals-chart-data" type="application/json">{{ evals_chart|safe }}</script>
+<script>
+    // Filtrele butonuna tıklanınca spinner göster
+    document.getElementById('filterForm').addEventListener('submit', function() {
+        document.getElementById('filterBtn').disabled = true;
+        document.getElementById('filterBtnText').textContent = 'Yükleniyor...';
+        document.getElementById('filterSpinner').classList.remove('hidden');
+    });
+    // Chart.js çizimi (veri varsa)
+    var chartCanvas = document.getElementById('evalsChart');
+    if (chartCanvas) {
+        const labels = JSON.parse(document.getElementById('evals-chart-labels').textContent);
+        const data = JSON.parse(document.getElementById('evals-chart-data').textContent);
+        const ctx = chartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Değerlendirme Sayısı',
+                    data: data,
+                    fill: true,
+                    backgroundColor: 'rgba(59,130,246,0.08)',
+                    borderColor: 'rgba(59,130,246,1)',
+                    pointBackgroundColor: 'rgba(59,130,246,1)',
+                    pointBorderColor: '#fff',
+                    tension: 0.4,
+                    borderWidth: 3,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.parsed.y} değerlendirme`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        },
+                        grid: {
+                            color: '#f3f4f6'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: '#f3f4f6'
+                        }
+                    }
+                }
+            }
+        });
+    }
+    // Tablo sıralama fonksiyonu
+    function sortTable(tableId, col) {
+        var table = document.getElementById(tableId);
+        var switching = true;
+        var dir = "asc";
+        var switchcount = 0;
+        while (switching) {
+            switching = false;
+            var rows = table.rows;
+            for (var i = 1; i < (rows.length - 1); i++) {
+                var shouldSwitch = false;
+                var x = rows[i].getElementsByTagName("TD")[col];
+                var y = rows[i + 1].getElementsByTagName("TD")[col];
+                var xContent = x ? x.textContent.trim().replace(',', '.') : '';
+                var yContent = y ? y.textContent.trim().replace(',', '.') : '';
+                var xNum = parseFloat(xContent);
+                var yNum = parseFloat(yContent);
+                if (!isNaN(xNum) && !isNaN(yNum)) {
+                    if ((dir == "asc" && xNum > yNum) || (dir == "desc" && xNum < yNum)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else {
+                    if ((dir == "asc" && xContent > yContent) || (dir == "desc" && xContent < yContent)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+    // Tablo arama fonksiyonu
+    function filterTable(inputId, tableId, col) {
+        var input = document.getElementById(inputId);
+        var filter = input.value.toUpperCase();
+        var table = document.getElementById(tableId);
+        var tr = table.getElementsByTagName("tr");
+        for (var i = 1; i < tr.length; i++) {
+            var td = tr[i].getElementsByTagName("td")[col];
+            if (td) {
+                var txtValue = td.textContent || td.innerText;
+                tr[i].style.display = txtValue.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+            }
+        }
+    }
+    document.getElementById('agentSearch').addEventListener('keyup', function() {
+        filterTable('agentSearch', 'agentTable', 0);
+    });
+    document.getElementById('expertSearch').addEventListener('keyup', function() {
+        filterTable('expertSearch', 'expertTable', 0);
+    });
+</script>
+{% endblock %} 

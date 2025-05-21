@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - CallQualityHub{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">{{ title }}</h1>
+        <div>
+            <a href="{% url 'calls:call_list' %}" class="text-blue-600 hover:text-blue-800 mr-3">
+                Tüm Çağrılar
+            </a>
+            {% if user.is_admin or user.is_superuser or user.is_expert %}
+            <a href="{% url 'calls:evaluate' call.id %}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Değerlendir
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %} rounded-md">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if request.GET.success %}
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Başarılı!</strong>
+        <span class="block sm:inline"> Değerlendirme başarıyla kaydedildi.</span>
+    </div>
+    {% endif %}
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Çağrı Bilgileri ve Ses Oynatıcı -->
+        <div class="md:col-span-1">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+                <div class="p-4 bg-blue-50 border-b border-blue-100">
+                    <h2 class="text-lg font-semibold text-blue-800">Çağrı Bilgileri</h2>
+                </div>
+                <div class="p-4 space-y-3">
+                    <div>
+                        <span class="font-semibold">Müşteri Temsilcisi:</span>
+                        <span>{{ call.agent.get_full_name }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Çağrı Kuyruğu:</span>
+                        <span>{% if call.call_queue %}{{ call.call_queue.name }}{% else %}-{% endif %}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Telefon Numarası:</span>
+                        <span>{{ call.phone_number|default:"-" }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Çağrı Tarihi:</span>
+                        <span>{{ call.call_date|date:"d.m.Y H:i" }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Yükleyen:</span>
+                        <span>{{ call.uploaded_by.get_full_name }}</span>
+                    </div>
+                    <div>
+                        <span class="font-semibold">Yüklenme Tarihi:</span>
+                        <span>{{ call.uploaded_at|date:"d.m.Y H:i" }}</span>
+                    </div>
+                </div>
+                
+                <div class="p-4 border-t border-gray-200">
+                    <h3 class="text-md font-semibold mb-3">Ses Kaydı</h3>
+                    <audio controls class="w-full">
+                        <source src="{{ call.audio_file.url }}" type="audio/mpeg">
+                        Tarayıcınız ses etiketi özelliğini desteklemiyor.
+                    </audio>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Değerlendirmeler -->
+        <div class="md:col-span-2">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-4 bg-blue-50 border-b border-blue-100">
+                    <h2 class="text-lg font-semibold text-blue-800">Değerlendirmeler</h2>
+                </div>
+                
+                {% if evaluations %}
+                <div class="divide-y divide-gray-200">
+                    {% for evaluation in evaluations %}
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-md font-semibold">
+                                    {{ evaluation.evaluator.get_full_name }} tarafından değerlendirildi
+                                </h3>
+                                <p class="text-sm text-gray-500">{{ evaluation.evaluated_at|date:"d.m.Y H:i" }}</p>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-2xl font-bold {% if evaluation.total_score >= 80 %}text-green-600{% elif evaluation.total_score >= 50 %}text-yellow-600{% else %}text-red-600{% endif %}">
+                                    {{ evaluation.total_score|floatformat:1 }}%
+                                </span>
+                                <div class="text-sm text-gray-500">
+                                    <a href="{% url 'calls:evaluation_detail' evaluation.id %}" class="text-blue-600 hover:text-blue-800">
+                                        Detaylı Görüntüle
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-md mb-4">
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Değerlendirme Notu:</h4>
+                            <p class="text-gray-800">{{ evaluation.final_note }}</p>
+                        </div>
+                        
+                        <!-- Puan Özeti -->
+                        <div>
+                            <h4 class="text-sm font-semibold text-gray-700 mb-2">Puan Özeti:</h4>
+                            <div class="space-y-2">
+                                {% for field_id, data in evaluation.scores.items %}
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm">{{ data.label }}</span>
+                                    <span class="text-sm font-medium">{{ data.score }} / {{ data.max_score }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="p-6 text-center text-gray-500">
+                    <p>Bu çağrı için henüz değerlendirme yapılmamış.</p>
+                    
+                    {% if user.is_admin or user.is_superuser or user.is_expert %}
+                    <div class="mt-4">
+                        <a href="{% url 'calls:evaluate' call.id %}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Değerlendirme Yap
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
