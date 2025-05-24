@@ -158,7 +158,7 @@ class EvaluationFormViewSet(viewsets.ModelViewSet):
     """
     queryset = EvaluationForm.objects.all()
     serializer_class = EvaluationFormSerializer
-    permission_classes = [permissions.IsAuthenticated, IsExpertOrAdmin]
+    permission_classes = [permissions.AllowAny]  # Geçici olarak herkesin erişimine açıyoruz
 
     def create(self, request, *args, **kwargs):
         # Aynı isimle form var mı kontrol et
@@ -175,7 +175,7 @@ class EvaluationViewSet(viewsets.ModelViewSet):
     Değerlendirme işlemleri için API görünümü.
     """
     queryset = Evaluation.objects.all().order_by('-evaluated_at')
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]  # Geçici olarak herkesin erişimine açıyoruz
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -198,10 +198,9 @@ class EvaluationViewSet(viewsets.ModelViewSet):
             form = serializer.validated_data['form']
             scores = serializer.validated_data['scores']
             
-            for field in form.fields:
-                key = field['key']
+            for key, field in form.fields.items():
                 max_score = field['max_score']
-                if key in scores and scores[key] > max_score:
+                if key in scores and scores[key]['score'] > max_score:
                     return Response(
                         {
                             'scores': [f'{key} için maksimum puan {max_score} olabilir.']

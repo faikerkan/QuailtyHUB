@@ -1,0 +1,132 @@
+name: 💡 Özellik İsteği
+description: CallQualityHub için yeni özellik önerin
+title: "[FEATURE]: "
+labels: ["enhancement", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        CallQualityHub için yeni özellik önerdiğiniz için teşekkür ederiz! 
+        Önerinizi detaylandırarak daha iyi değerlendirmemize yardımcı olun.
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Özellik Açıklaması
+      description: Önermek istediğiniz özelliği açıklayın
+      placeholder: Bu özellik ne yapacak?
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: Problem veya İhtiyaç
+      description: Bu özellik hangi problemi çözecek veya hangi ihtiyacı karşılayacak?
+      placeholder: Mevcut durumda hangi zorlukları yaşıyorsunuz?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Önerilen Çözüm
+      description: Bu özelliğin nasıl çalışmasını istiyorsunuz?
+      placeholder: |
+        - Kullanıcı şunu yapar...
+        - Sistem şunu gösterir...
+        - Sonuç şu olur...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: Özellik Kategorisi
+      description: Bu özellik hangi kategoriye giriyor?
+      options:
+        - Kullanıcı Arayüzü (UI/UX)
+        - Çağrı Yönetimi
+        - Değerlendirme Sistemi
+        - Raporlama ve Analytics
+        - Kullanıcı Yönetimi
+        - API ve Entegrasyonlar
+        - Güvenlik
+        - Performance
+        - Diğer
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user-role
+    attributes:
+      label: Hangi Kullanıcı Rolü İçin?
+      description: Bu özellik hangi kullanıcı rolü için faydalı olacak?
+      options:
+        - Tüm kullanıcılar
+        - Yönetici (Admin)
+        - Kalite Uzmanı (Expert)
+        - Müşteri Temsilcisi (Agent)
+        - Sistem yöneticileri
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Öncelik Seviyesi
+      description: Bu özelliğin öncelik seviyesini nasıl değerlendiriyorsunuz?
+      options:
+        - Düşük (Nice to have)
+        - Orta (Faydalı olur)
+        - Yüksek (İhtiyaç duyuluyor)
+        - Kritik (Kesinlikle gerekli)
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatif Çözümler
+      description: Bu problemi çözmek için düşündüğünüz alternatif yollar var mı?
+      placeholder: Başka hangi yaklaşımlar mümkün olabilir?
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Kullanım Senaryoları
+      description: Bu özelliğin kullanılacağı senaryoları örneklerle açıklayın
+      placeholder: |
+        Senaryo 1: ...
+        Senaryo 2: ...
+        Senaryo 3: ...
+
+  - type: checkboxes
+    id: implementation-considerations
+    attributes:
+      label: Uygulama Konusunda Düşünceler
+      description: Bu özelliğin uygulanması sırasında dikkat edilmesi gereken noktalar
+      options:
+        - label: Bu özellik mevcut fonksiyonaliteyi etkileyebilir (breaking change)
+        - label: Bu özellik için veritabanı değişiklikleri gerekebilir
+        - label: Bu özellik için yeni API endpoint'leri gerekli
+        - label: Bu özellik için UI/UX tasarım değişiklikleri gerekli
+        - label: Bu özellik için güvenlik kontrolü gerekli
+        - label: Bu özellik için test senaryoları yazılmalı
+        - label: Bu özellik için dokümantasyon güncellemesi gerekli
+
+  - type: textarea
+    id: mockups-wireframes
+    attributes:
+      label: Mockup'lar / Wireframe'ler
+      description: Özelliğin görsel tasarımı hakkında fikirleriniz varsa ekleyin
+      placeholder: Görsel tasarım önerilerinizi buraya ekleyebilirsiniz
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Ek Bilgiler
+      description: Eklemek istediğiniz başka bilgiler var mı?
+      placeholder: Referans linkler, benzer örnekler, teknik detaylar... 

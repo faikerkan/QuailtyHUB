@@ -1,240 +1,320 @@
-# CallQualityHub - Çağrı Merkezi Kalite Değerlendirme Sistemi
+# 🎯 CallQualityHub - Premium Çağrı Merkezi Kalite Yönetim Sistemi
 
-CallQualityHub, çağrı merkezi operasyonlarında kalite değerlendirme süreçlerini web tabanlı ve dinamik şekilde yönetmek, kolaylaştırmak ve raporlamak için geliştirilmiş bir uygulamadır.
+[![Django](https://img.shields.io/badge/Django-4.2-green)](https://djangoproject.com/)
+[![Python](https://img.shields.io/badge/Python-3.8+-blue)](https://python.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue)](https://postgresql.org/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.0-06B6D4)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-## 🚀 Özellikler
+**CallQualityHub**, çağrı merkezi operasyonlarında kalite değerlendirme süreçlerini web tabanlı ve dinamik şekilde yönetmek için geliştirilmiş modern bir uygulamadır. Premium tasarımı, glassmorphism efektleri ve gelişmiş animasyonları ile 2025 standartlarına uygun profesyonel bir deneyim sunar.
 
-- Dinamik değerlendirme formları
-- Rol tabanlı kullanıcı yetkilendirme (Yönetici, Kalite Uzmanı, Müşteri Temsilcisi)
-- Çağrı kayıtlarının yüklenmesi ve saklanması
-- Özelleştirilebilir puanlama sistemi
-- Detaylı raporlama ve grafikler
-- Kullanıcı dostu arayüz (TailwindCSS ile)
-- RESTful API
+![CallQualityHub Dashboard](docs/images/dashboard-preview.png)
 
-## 🔧 Teknolojiler
+## ✨ Öne Çıkan Özellikler
 
-- **Backend:** Django 4.2
-- **Frontend:** Django Templates & TailwindCSS
-- **Veritabanı:** PostgreSQL
-- **API:** Django REST Framework
-- **Dosya Yönetimi:** Django FileField
+### 🔐 **Rol Tabanlı Güvenlik Sistemi**
+- **Yönetici**: Tüm sistem yönetimi ve kullanıcı kontrolü
+- **Kalite Uzmanı**: Değerlendirme formları ve kalite kontrol
+- **Müşteri Temsilcisi**: Kişisel performans görüntüleme
 
-## 📋 Kurulum
+### 📊 **Dinamik Değerlendirme Sistemi**
+- Özelleştirilebilir değerlendirme formları
+- JSON tabanlı esnek puanlama sistemi
+- Gerçek zamanlı performans takibi
+- Detaylı analitik raporlar
+
+### 🎨 **Premium Kullanıcı Arayüzü**
+- Modern glassmorphism tasarım sistemi
+- Smooth animasyonlar ve hover efektleri
+- Responsive tasarım (mobil uyumlu)
+- Dark theme ve professional color palette
+
+### 🔊 **Medya Yönetimi**
+- Çağrı kayıtlarının güvenli yüklenmesi
+- Audio player entegrasyonu
+- Dosya yönetimi ve arşivleme
+
+### 📈 **Analytics & Reporting**
+- Gerçek zamanlı istatistikler
+- Performance tracking
+- Trend analizi
+- Export fonksiyonları
+
+## 🏗️ Teknoloji Stack
+
+| Kategori | Teknoloji |
+|----------|-----------|
+| **Backend** | Django 4.2, Django REST Framework |
+| **Frontend** | Django Templates, TailwindCSS 3.0 |
+| **Database** | PostgreSQL 15+ |
+| **Authentication** | Django Auth, Role-based permissions |
+| **UI/UX** | Glassmorphism, CSS Animations, Inter & Poppins fonts |
+| **Deployment** | Gunicorn, Nginx, WhiteNoise |
+
+## 🚀 Hızlı Başlangıç
 
 ### Ön Gereksinimler
 
-- Python 3.8+
-- PostgreSQL
-- pip
-- Node.js ve npm (TailwindCSS için)
-
-### Adımlar
-
-1. Repository'yi klonlayın:
-   ```bash
-   git clone https://github.com/username/callqualityhub.git
-   cd callqualityhub
-   ```
-
-2. Sanal ortam oluşturun ve aktif edin:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # Linux/Mac için
-   venv\Scripts\activate  # Windows için
-   ```
-
-3. Bağımlılıkları yükleyin:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. .env dosyasını yapılandırın (örnek .env.example dosyasını kopyalayarak):
-   ```bash
-   cp .env-sample .env
-   ```
-
-5. PostgreSQL veritabanını oluşturun:
-   ```bash
-   # PostgreSQL'e bağlanın
-   sudo -u postgres psql
-   
-   # Veritabanı ve kullanıcı oluşturun
-   CREATE DATABASE qualityhub;
-   CREATE USER qualityhubuser WITH PASSWORD 'qualityhub123';
-   ALTER ROLE qualityhubuser SET client_encoding TO 'utf8';
-   ALTER ROLE qualityhubuser SET default_transaction_isolation TO 'read committed';
-   ALTER ROLE qualityhubuser SET timezone TO 'Europe/Istanbul';
-   GRANT ALL PRIVILEGES ON DATABASE qualityhub TO qualityhubuser;
-   
-   # PostgreSQL konsolundan çıkın
-   \q
-   ```
-
-6. Django migrasyonlarını uygulayın:
-   ```bash
-   python manage.py migrate
-   ```
-
-7. TailwindCSS bağımlılıklarını yükleyin:
-   ```bash
-   python manage.py tailwind install
-   ```
-
-8. TailwindCSS geliştirme sunucusunu başlatın:
-   ```bash
-   python manage.py tailwind start
-   ```
-
-9. Geliştirme sunucusunu başlatın:
-   ```bash
-   python manage.py runserver
-   ```
-
-## 📚 Kullanım
-
-### Yönetici Kullanıcısı Oluşturma
-
 ```bash
-python manage.py createsuperuser
+# Gerekli yazılımlar
+Python 3.8+
+PostgreSQL 15+
+Node.js 16+ (TailwindCSS için)
 ```
 
-### Erişim Bilgileri
-
-- **Yönetici Paneli:** `http://localhost:8000/admin/`
-- **Uygulama:** `http://localhost:8000/`
-
-## 🤝 Katkıda Bulunma
-
-1. Fork edin
-2. Feature branch oluşturun (`git checkout -b feature/amazing-feature`)
-3. Değişikliklerinizi commit edin (`git commit -m 'Add some amazing feature'`)
-4. Branch'inizi push edin (`git push origin feature/amazing-feature`)
-5. Pull Request oluşturun
-
-## 📝 Lisans
-
-Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
-
-## 📞 İletişim
-
-Proje Yöneticisi - [admin@callqualityhub.com](mailto:admin@callqualityhub.com)
-
-Proje Linki: [https://github.com/username/callqualityhub](https://github.com/username/callqualityhub)
-
-## 🧪 Testler
-
-Tümleşik testler için kök dizinde `tests/` klasörü bulunmaktadır. Testleri çalıştırmak için:
+### 1️⃣ Kurulum
 
 ```bash
-pytest
+# Repository'yi klonlayın
+git clone https://github.com/username/callqualityhub.git
+cd callqualityhub
+
+# Sanal ortam oluşturun
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# .venv\Scripts\activate  # Windows
+
+# Bağımlılıkları yükleyin
+pip install -r requirements.txt
 ```
 
-veya Django testleri için:
+### 2️⃣ Veritabanı Kurulumu
 
-```bash
-python manage.py test
-```
-
-Testler, uçtan uca senaryoları ve API fonksiyonlarını kapsamaktadır.
-
-## 🚀 Canlı Ortama Dağıtım
-
-Projeyi canlı ortama (üretime) dağıtmak için aşağıdaki adımları takip edebilirsiniz:
-
-### 1. Sunucu Hazırlığı
-
-```bash
-# Gerekli paketlerin sunucuya kurulumu
-sudo apt update
-sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx
-
-# Proje dizini oluşturma
-sudo mkdir -p /var/www/callqualityhub
-sudo chown -R $USER:$USER /var/www/callqualityhub
-```
-
-### 2. Veritabanı Kurulumu
-
-```bash
-# PostgreSQL'e bağlanın
-sudo -u postgres psql
-
-# Veritabanı ve kullanıcı oluşturun
+```sql
+-- PostgreSQL'e bağlanın ve şu komutları çalıştırın:
 CREATE DATABASE qualityhub;
-CREATE USER qualityhubuser WITH PASSWORD 'guvenli_sifre';
+CREATE USER qualityhubuser WITH PASSWORD 'qualityhub123';
 ALTER ROLE qualityhubuser SET client_encoding TO 'utf8';
 ALTER ROLE qualityhubuser SET default_transaction_isolation TO 'read committed';
 ALTER ROLE qualityhubuser SET timezone TO 'Europe/Istanbul';
 GRANT ALL PRIVILEGES ON DATABASE qualityhub TO qualityhubuser;
-
-# PostgreSQL konsolundan çıkın
-\q
 ```
 
-### 3. Proje Dağıtımı
+### 3️⃣ Konfigürasyon
 
 ```bash
-# Proje kodlarını klonlayın
+# Environment dosyasını oluşturun
+cp .env-sample .env
+
+# .env dosyasını düzenleyin (veritabanı bilgileri vs.)
+nano .env
+```
+
+### 4️⃣ Django Setup
+
+```bash
+# Migrasyonları uygulayın
+python manage.py migrate
+
+# Süper kullanıcı oluşturun
+python manage.py createsuperuser
+
+# TailwindCSS kurulumu
+python manage.py tailwind install
+
+# Statik dosyaları toplayın
+python manage.py collectstatic --noinput
+```
+
+### 5️⃣ Sunucuyu Başlatın
+
+```bash
+# Geliştirme sunucusu
+python manage.py runserver
+
+# TailwindCSS watch (ayrı terminal)
+python manage.py tailwind start
+```
+
+🎉 **Hazır!** `http://localhost:8000` adresinden uygulamaya erişebilirsiniz.
+
+## 📱 Ekran Görüntüleri
+
+### Dashboard
+![Dashboard](docs/images/dashboard.png)
+
+### Login Page
+![Login](docs/images/login.png)
+
+### User Management
+![Users](docs/images/users.png)
+
+### Call Evaluation
+![Evaluation](docs/images/evaluation.png)
+
+## 🔧 Geliştirici Kılavuzu
+
+### Proje Yapısı
+
+```
+callqualityhub/
+├── accounts/           # Kullanıcı yönetimi
+├── calls/             # Çağrı kayıtları ve değerlendirme
+├── dashboard/         # Dashboard views
+├── api/              # REST API endpoints
+├── templates/        # Django templates
+├── static/          # Statik dosyalar
+├── media/           # Kullanıcı yükleme dosyaları
+├── tests/           # Test dosyaları
+└── docs/            # Dokümantasyon
+```
+
+### API Endpoints
+
+```bash
+# Kullanıcı yönetimi
+GET    /api/users/
+POST   /api/users/
+GET    /api/users/{id}/
+
+# Çağrı yönetimi
+GET    /api/calls/
+POST   /api/calls/
+GET    /api/calls/{id}/
+
+# Değerlendirme formları
+GET    /api/evaluation-forms/
+POST   /api/evaluation-forms/
+```
+
+### Test Çalıştırma
+
+```bash
+# Tüm testleri çalıştır
+pytest
+
+# Django testleri
+python manage.py test
+
+# Coverage raporu
+pytest --cov=.
+```
+
+## 🏭 Production Deployment
+
+### Docker ile Deployment
+
+```bash
+# Docker imajı oluştur
+docker build -t callqualityhub .
+
+# Docker Compose ile çalıştır
+docker-compose up -d
+```
+
+### Manual Deployment (Ubuntu/Debian)
+
+```bash
+# Sistem güncellemesi
+sudo apt update && sudo apt upgrade -y
+
+# Gerekli paketler
+sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx
+
+# Proje deployment
 git clone https://github.com/username/callqualityhub.git /var/www/callqualityhub
-
-# Sanal ortam oluşturun
 cd /var/www/callqualityhub
-python3 -m venv env
-source env/bin/activate
 
-# Bağımlılıkları yükleyin
+# Production kurulumu
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 
-# .env dosyasını oluşturun
-nano .env
-# .env dosyasına canlı ortam ayarlarını ekleyin
-```
+# Production ayarları
+cp .env-sample .env
+# .env dosyasını production değerleri ile düzenleyin
 
-### 4. Statik Dosyaları Toplayın ve Veritabanı Migrasyonlarını Çalıştırın
-
-```bash
-python manage.py collectstatic --no-input
-python manage.py migrate
-```
-
-### 5. Gunicorn ve Nginx Yapılandırması
-
-Detaylı yapılandırma adımları için `postgresql_canli_gecis_plani.md` dosyasına başvurun.
-
-### 6. SSL Sertifikası Alın
-
-```bash
-sudo apt install certbot python3-certbot-nginx
-sudo certbot --nginx -d alan_adiniz.com -d www.alan_adiniz.com
-```
-
-## 🔄 SQLite'dan PostgreSQL'e Veri Taşıma
-
-Mevcut SQLite veritabanınızdaki verileri PostgreSQL'e taşımak için:
-
-```bash
-# 1. SQLite'dan veri dışa aktarma
-python manage.py dumpdata --exclude auth.permission --exclude contenttypes --indent 2 > data.json
-
-# 2. PostgreSQL yapılandırmasına geçiş (settings.py değişikliği)
-# 3. Veritabanını oluştur ve migrasyonları çalıştır
+# Statik dosyalar ve migrasyonlar
+python manage.py collectstatic --noinput
 python manage.py migrate
 
-# 4. Dışa aktarılan verileri PostgreSQL'e aktar
-python manage.py loaddata data.json
+# Gunicorn ve Nginx konfigürasyonu
+# (Detaylı kılavuz için docs/deployment.md dosyasına bakın)
 ```
 
-## 📊 Yedekleme Stratejisi
+## 🧪 Testing
 
-Canlı ortamda düzenli yedekleme için:
+Proje kapsamlı test coverage'ına sahiptir:
 
 ```bash
-# PostgreSQL veritabanı yedeği
-pg_dump -U qualityhubuser -h localhost qualityhub > backup_$(date +%Y%m%d).sql
+# Unit testler
+python manage.py test accounts
+python manage.py test calls
+python manage.py test dashboard
 
-# Medya dosyaları yedeği
-tar -czvf media_backup_$(date +%Y%m%d).tar.gz /var/www/callqualityhub/media
+# Integration testler
+pytest tests/integration/
+
+# End-to-end testler
+pytest tests/e2e/
 ```
 
-Otomatik yedekleme betikleri hakkında daha fazla bilgi için `postgresql_canli_gecis_plani.md` dosyasına başvurun. 
+## 🔒 Güvenlik
+
+- CSRF koruması aktif
+- SQL Injection koruması
+- XSS koruması
+- Rol tabanlı erişim kontrolü
+- Secure headers (production)
+- Rate limiting
+
+## 📈 Performance
+
+- Database query optimization
+- Static file compression
+- CDN ready
+- Caching system
+- Lazy loading
+
+## 🤝 Katkıda Bulunma
+
+1. Fork edin
+2. Feature branch oluşturun: `git checkout -b feature/amazing-feature`
+3. Değişikliklerinizi commit edin: `git commit -m 'feat: add amazing feature'`
+4. Branch'inizi push edin: `git push origin feature/amazing-feature`
+5. Pull Request oluşturun
+
+### Katkı Kuralları
+
+- Code style: PEP 8
+- Commit messages: Conventional Commits
+- Test coverage: minimum %80
+- Dokümantasyon güncellemesi gerekli
+
+## 📋 Roadmap
+
+- [ ] **v2.0** - Real-time notifications
+- [ ] **v2.1** - Advanced reporting dashboard
+- [ ] **v2.2** - Mobile app
+- [ ] **v2.3** - AI-powered quality scoring
+- [ ] **v2.4** - Multi-language support
+
+## 📞 Destek & İletişim
+
+- **Documentation**: [Wiki](https://github.com/username/callqualityhub/wiki)
+- **Issues**: [GitHub Issues](https://github.com/username/callqualityhub/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/username/callqualityhub/discussions)
+- **Email**: admin@callqualityhub.com
+
+## 📄 Lisans
+
+Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır. Detaylar için LICENSE dosyasına bakın.
+
+## 🙏 Teşekkürler
+
+Bu projeyi mümkün kılan harika açık kaynak projelere teşekkürler:
+
+- [Django](https://djangoproject.com/) - Web framework
+- [TailwindCSS](https://tailwindcss.com/) - CSS framework
+- [PostgreSQL](https://postgresql.org/) - Database
+- [Heroicons](https://heroicons.com/) - SVG icons
+
+---
+
+<div align="center">
+
+**CallQualityHub ile çağrı merkezi kalite yönetimini bir üst seviyeye taşıyın! 🚀**
+
+[⭐ Star](https://github.com/username/callqualityhub) | [🐛 Report Bug](https://github.com/username/callqualityhub/issues) | [💡 Request Feature](https://github.com/username/callqualityhub/issues)
+
+</div> 

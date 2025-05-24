@@ -1,0 +1,113 @@
+name: 🐛 Hata Raporu
+description: CallQualityHub'da bir hata bildirin
+title: "[BUG]: "
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        CallQualityHub'da bir hata bildirdiğiniz için teşekkür ederiz! 
+        Lütfen mümkün olduğunca detaylı bilgi verin.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Hata Açıklaması
+      description: Yaşadığınız hatayı açıklayın
+      placeholder: Ne oldu?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Yeniden Üretme Adımları
+      description: Hatayı yeniden üretmek için gereken adımlar
+      placeholder: |
+        1. '...' sayfasına git
+        2. '...' butonuna tıkla
+        3. '...' formunu doldur
+        4. Hata görülür
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Beklenen Davranış
+      description: Ne olmasını bekliyordunuz?
+      placeholder: Normal şartlarda ne olması gerekiyor?
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Ekran Görüntüleri
+      description: Hatayı gösteren ekran görüntüleri ekleyin
+      placeholder: Sürükle-bırak veya yapıştır
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Tarayıcı
+      description: Hangi tarayıcıda yaşadınız?
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Opera
+        - Diğer
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Tarayıcı Versiyonu
+      description: Tarayıcı versiyonunuz nedir?
+      placeholder: "örn. Chrome 95.0.4638.69"
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: İşletim Sistemi
+      description: Hangi işletim sistemini kullanıyorsunuz?
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - iOS
+        - Android
+    validations:
+      required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: İşletim Sistemi Versiyonu
+      description: İşletim sistemi versiyonunuz?
+      placeholder: "örn. Windows 11, macOS 12.0, Ubuntu 20.04"
+
+  - type: dropdown
+    id: user-role
+    attributes:
+      label: Kullanıcı Rolü
+      description: Sistemde hangi rol ile giriş yaptınız?
+      options:
+        - Yönetici (Admin)
+        - Kalite Uzmanı (Expert)
+        - Müşteri Temsilcisi (Agent)
+        - Giriş yapmamış kullanıcı
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Ek Bilgiler
+      description: Hata hakkında eklemek istediğiniz başka bilgiler var mı?
+      placeholder: Konsol hataları, network istekleri, diğer gözlemler... 

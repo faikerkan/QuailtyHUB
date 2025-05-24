@@ -6,6 +6,45 @@
 <div class="max-w-6xl mx-auto px-4 py-8">
     <h1 class="text-2xl font-bold mb-6">{{ title }}</h1>
     
+    {% if messages %}
+    <div class="mb-4">
+        {% for message in messages %}
+        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'info' %}bg-blue-100 text-blue-800{% else %}bg-green-100 text-green-800{% endif %} rounded-md">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if existing_evaluation %}
+    <div class="bg-white shadow-md rounded-lg overflow-hidden mb-6">
+        <div class="p-4 bg-green-50 border-b border-green-100">
+            <h2 class="text-lg font-semibold text-green-800">Mevcut Değerlendirme Bilgileri</h2>
+        </div>
+        <div class="p-4">
+            <div class="flex justify-between items-center mb-4">
+                <div>
+                    <p><span class="font-semibold">Değerlendiren:</span> {{ existing_evaluation.evaluator.get_full_name }}</p>
+                    <p><span class="font-semibold">Tarih:</span> {{ existing_evaluation.evaluated_at|date:"d.m.Y H:i" }}</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-2xl font-bold text-green-700">{{ existing_evaluation.total_score }}</span>
+                    <span class="text-gray-600">/ 100</span>
+                </div>
+            </div>
+            <div class="mt-4">
+                <h3 class="font-semibold mb-2">Değerlendirme Notu:</h3>
+                <p class="p-3 bg-gray-50 rounded">{{ existing_evaluation.final_note }}</p>
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'calls:evaluation_detail' existing_evaluation.id %}" class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Detaylı Görüntüle
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Çağrı Bilgileri ve Ses Oynatıcı -->
         <div class="md:col-span-1">
@@ -82,174 +121,310 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const callId = {{ call.id }};
+    console.log('Sayfa yüklendi, JavaScript çalışıyor');
+    
+    // Django template değişkenlerini güvenli şekilde al
+    const callId = parseInt('{{ call.id|escapejs }}');
+    const csrfToken = '{{ csrf_token|escapejs }}';
+    
+    console.log('Call ID:', callId);
+    console.log('CSRF Token:', csrfToken);
+    
     let formId = null;
     let formFields = {};
     let maxTotal = 100;
     let fieldOrder = [];
+    
     const evaluationForm = document.getElementById('evaluationForm');
     const formError = document.getElementById('formError');
     const formSuccess = document.getElementById('formSuccess');
     const totalScoreBox = document.getElementById('totalScore');
+    const dynamicFieldsContainer = document.getElementById('dynamicFields');
+    
+    // Elementlerin var olup olmadığını kontrol et
+    if (!evaluationForm) {
+        console.error('evaluationForm elementi bulunamadı!');
+        return;
+    }
+    if (!dynamicFieldsContainer) {
+        console.error('dynamicFields elementi bulunamadı!');
+        return;
+    }
+    
+    console.log('Tüm elementler bulundu, API çağrısı yapılıyor...');
     
     // Form alanlarını yükle
-    fetch('/api/evaluation-forms/')
-        .then(response => response.json())
-        .then(data => {
-            let form = null;
-            if (data.results && data.results.length > 0) {
-                form = data.results[0];
-            } else if (Array.isArray(data) && data.length > 0) {
-                form = data[0];
-            }
-            if (form) {
-                formId = form.id;
-                formFields = form.fields;
+    fetch('/api/evaluation-forms/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(function(response) {
+        console.log('API yanıt durumu:', response.status);
+        if (!response.ok) {
+            throw new Error('API yanıtı başarısız: ' + response.status);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        console.log('API yanıtı alındı:', data);
+        
+        let form = null;
+        if (data && Array.isArray(data) && data.length > 0) {
+            form = data[0];
+        } else if (data && data.results && data.results.length > 0) {
+            form = data.results[0];
+        }
+        
+        if (form && form.fields) {
+            console.log('Form bulundu:', form);
+            formId = form.id;
+            formFields = form.fields;
+            
+            console.log('Form alanları:', formFields);
+            console.log('Form alanları tipi:', typeof formFields);
+            
+            if (typeof formFields === 'object' && formFields !== null) {
                 fieldOrder = Object.keys(formFields);
-                maxTotal = Object.values(formFields).reduce((acc, f) => acc + (f.max_score || 0), 0);
-                renderForm(formFields);
-                updateTotalScore();
+                console.log('Alan sırası:', fieldOrder);
+                
+                if (fieldOrder.length > 0) {
+                    // Toplam puanı hesapla
+                    maxTotal = 0;
+                    for (let fieldId in formFields) {
+                        if (formFields[fieldId] && formFields[fieldId].max_score) {
+                            maxTotal += formFields[fieldId].max_score;
+                        }
+                    }
+                    console.log('Toplam maksimum puan:', maxTotal);
+                    
+                    renderForm(formFields);
+                    updateTotalScore();
+                } else {
+                    console.error('Form alanları boş!');
+                    showError('Değerlendirme formu alanları bulunamadı.');
+                }
             } else {
-                showError('Değerlendirme formu bulunamadı.');
+                console.error('Form alanları geçersiz format!', formFields);
+                showError('Değerlendirme formu geçersiz formatta.');
             }
-        })
-        .catch(error => {
-            console.error('Form yükleme hatası:', error);
-            showError('Form yüklenirken bir hata oluştu.');
-        });
+        } else {
+            console.error('Form bulunamadı veya fields eksik!', form);
+            showError('Değerlendirme formu bulunamadı.');
+        }
+    })
+    .catch(function(error) {
+        console.error('API çağrısı başarısız:', error);
+        showError('Form yüklenirken hata oluştu: ' + error.message);
+    });
     
     // Form alanlarını oluştur
     function renderForm(fields) {
-        const container = document.getElementById('dynamicFields');
-        container.innerHTML = '';
+        console.log('Form alanları render ediliyor...');
         
-        Object.entries(fields).forEach(([fieldId, field]) => {
-            const fieldDiv = document.createElement('div');
-            fieldDiv.className = 'mb-6';
-            
-            const label = document.createElement('label');
-            label.className = 'block font-medium text-gray-700 mb-2';
-            label.htmlFor = `score_${fieldId}`;
-            label.textContent = field.label;
-            
-            const sliderWrapper = document.createElement('div');
-            sliderWrapper.className = 'flex items-center space-x-4';
-            
-            const slider = document.createElement('input');
-            slider.type = 'range';
-            slider.id = `score_${fieldId}`;
-            slider.name = `score_${fieldId}`;
-            slider.min = 0;
-            slider.max = field.max_score;
-            slider.value = field.max_score;
-            slider.className = 'w-2/3 accent-blue-600';
-            slider.required = true;
-            slider.addEventListener('input', updateTotalScore);
-            
-            const valueBox = document.createElement('span');
-            valueBox.id = `value_${fieldId}`;
-            valueBox.className = 'ml-2 font-semibold text-blue-700';
-            valueBox.textContent = field.max_score;
-            slider.addEventListener('input', function() {
-                valueBox.textContent = slider.value;
-            });
-            
-            sliderWrapper.appendChild(slider);
-            sliderWrapper.appendChild(valueBox);
-            sliderWrapper.appendChild(document.createTextNode(` / ${field.max_score}`));
-            fieldDiv.appendChild(label);
-            fieldDiv.appendChild(sliderWrapper);
-            container.appendChild(fieldDiv);
-        });
+        // Konteyner'ı temizle
+        dynamicFieldsContainer.innerHTML = '';
+        
+        // Her alan için HTML oluştur
+        for (let fieldId in fields) {
+            if (fields.hasOwnProperty(fieldId)) {
+                let field = fields[fieldId];
+                console.log('Alan oluşturuluyor:', fieldId, field);
+                
+                // Ana div
+                let fieldDiv = document.createElement('div');
+                fieldDiv.className = 'mb-6';
+                
+                // Label
+                let label = document.createElement('label');
+                label.className = 'block font-medium text-gray-700 mb-2';
+                label.setAttribute('for', 'score_' + fieldId);
+                label.textContent = field.label || fieldId;
+                
+                // Slider wrapper
+                let sliderWrapper = document.createElement('div');
+                sliderWrapper.className = 'flex items-center space-x-4';
+                
+                // Slider input
+                let slider = document.createElement('input');
+                slider.type = 'range';
+                slider.id = 'score_' + fieldId;
+                slider.name = 'score_' + fieldId;
+                slider.min = '0';
+                slider.max = field.max_score ? field.max_score.toString() : '10';
+                slider.value = field.max_score ? field.max_score.toString() : '10';
+                slider.className = 'w-2/3 accent-blue-600';
+                slider.required = true;
+                
+                // Value display
+                let valueBox = document.createElement('span');
+                valueBox.id = 'value_' + fieldId;
+                valueBox.className = 'ml-2 font-semibold text-blue-700';
+                valueBox.textContent = field.max_score ? field.max_score.toString() : '10';
+                
+                // Max score display
+                let maxScoreText = document.createTextNode(' / ' + (field.max_score || 10));
+                
+                // Event listener for slider
+                slider.addEventListener('input', function() {
+                    valueBox.textContent = slider.value;
+                    updateTotalScore();
+                });
+                
+                // Append elements
+                sliderWrapper.appendChild(slider);
+                sliderWrapper.appendChild(valueBox);
+                sliderWrapper.appendChild(maxScoreText);
+                
+                fieldDiv.appendChild(label);
+                fieldDiv.appendChild(sliderWrapper);
+                
+                dynamicFieldsContainer.appendChild(fieldDiv);
+            }
+        }
+        
+        console.log('Form alanları başarıyla render edildi.');
     }
     
     // Toplam puanı güncelle
     function updateTotalScore() {
         let total = 0;
-        fieldOrder.forEach(fieldId => {
-            const slider = document.getElementById(`score_${fieldId}`);
-            total += parseInt(slider.value) || 0;
-        });
-        totalScoreBox.textContent = total;
+        for (let i = 0; i < fieldOrder.length; i++) {
+            let fieldId = fieldOrder[i];
+            let slider = document.getElementById('score_' + fieldId);
+            if (slider) {
+                total += parseInt(slider.value) || 0;
+            }
+        }
+        if (totalScoreBox) {
+            totalScoreBox.textContent = total.toString();
+        }
+        console.log('Toplam puan güncellendi:', total);
     }
     
     // Form gönderme
-    evaluationForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        const scores = {};
-        fieldOrder.forEach(fieldId => {
-            const slider = document.getElementById(`score_${fieldId}`);
-            const field = formFields[fieldId];
-            scores[fieldId] = {
-                score: parseInt(slider.value) || 0,
-                max_score: field.max_score,
-                label: field.label
-            };
-        });
-        
-        const finalNote = document.getElementById('final_note').value;
-        
-        const payload = {
-            call: callId,
-            form: formId,
-            scores: scores,
-            final_note: finalNote
-        };
-        
-        fetch('/api/evaluations/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(response => response.json().then(data => ({ status: response.status, data })))
-        .then(({ status, data }) => {
-            if (status === 201) {
-                window.location.href = `/calls/${callId}/?success=true`;
-            } else {
-                showError(data.detail || 'Değerlendirme kaydedilirken bir hata oluştu.');
+    if (evaluationForm) {
+        evaluationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form gönderiliyor...');
+            
+            let scores = {};
+            for (let i = 0; i < fieldOrder.length; i++) {
+                let fieldId = fieldOrder[i];
+                let slider = document.getElementById('score_' + fieldId);
+                let field = formFields[fieldId];
+                
+                if (slider && field) {
+                    scores[fieldId] = {
+                        score: parseInt(slider.value) || 0,
+                        max_score: field.max_score || 10,
+                        label: field.label || fieldId
+                    };
+                }
             }
-        })
-        .catch(error => {
-            console.error('Gönderme hatası:', error);
-            showError('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+            
+            let finalNoteElement = document.getElementById('final_note');
+            let finalNote = finalNoteElement ? finalNoteElement.value : '';
+            
+            let payload = {
+                call: callId,
+                form: formId,
+                scores: scores,
+                final_note: finalNote
+            };
+            
+            console.log('Gönderilen veri:', payload);
+            
+            fetch('/api/evaluations/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(function(response) {
+                return response.json().then(function(data) {
+                    return { status: response.status, data: data };
+                });
+            })
+            .then(function(result) {
+                if (result.status === 201) {
+                    window.location.href = '/calls/' + callId + '/?success=true';
+                } else {
+                    let errorMsg = result.data.detail || 'Değerlendirme kaydedilirken hata oluştu.';
+                    showError(errorMsg);
+                }
+            })
+            .catch(function(error) {
+                console.error('Form gönderme hatası:', error);
+                showError('Bir hata oluştu. Lütfen tekrar deneyin.');
+            });
         });
-    });
+    }
     
-    // Formu temizle
-    document.getElementById('clearBtn').addEventListener('click', function() {
-        fieldOrder.forEach(fieldId => {
-            const slider = document.getElementById(`score_${fieldId}`);
-            const field = formFields[fieldId];
-            slider.value = field.max_score;
-            document.getElementById(`value_${fieldId}`).textContent = field.max_score;
+    // Temizle butonu
+    let clearBtn = document.getElementById('clearBtn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            console.log('Form temizleniyor...');
+            for (let i = 0; i < fieldOrder.length; i++) {
+                let fieldId = fieldOrder[i];
+                let slider = document.getElementById('score_' + fieldId);
+                let valueBox = document.getElementById('value_' + fieldId);
+                let field = formFields[fieldId];
+                
+                if (slider && field && field.max_score) {
+                    slider.value = field.max_score.toString();
+                    if (valueBox) {
+                        valueBox.textContent = field.max_score.toString();
+                    }
+                }
+            }
+            
+            let finalNoteElement = document.getElementById('final_note');
+            if (finalNoteElement) {
+                finalNoteElement.value = '';
+            }
+            
+            updateTotalScore();
+            hideMessages();
         });
-        document.getElementById('final_note').value = '';
-        updateTotalScore();
-        hideMessages();
-    });
+    }
     
-    // Hata mesajı göster
+    // Yardımcı fonksiyonlar
     function showError(message) {
-        formError.textContent = message;
-        formError.classList.remove('hidden');
-        formSuccess.classList.add('hidden');
+        if (formError) {
+            formError.textContent = message;
+            formError.classList.remove('hidden');
+        }
+        if (formSuccess) {
+            formSuccess.classList.add('hidden');
+        }
+        console.error('Hata gösterildi:', message);
     }
     
-    // Başarı mesajı göster
     function showSuccess(message) {
-        formSuccess.textContent = message;
-        formSuccess.classList.remove('hidden');
-        formError.classList.add('hidden');
+        if (formSuccess) {
+            formSuccess.textContent = message;
+            formSuccess.classList.remove('hidden');
+        }
+        if (formError) {
+            formError.classList.add('hidden');
+        }
+        console.log('Başarı mesajı gösterildi:', message);
     }
     
-    // Mesajları gizle
     function hideMessages() {
-        formError.classList.add('hidden');
-        formSuccess.classList.add('hidden');
+        if (formError) {
+            formError.classList.add('hidden');
+        }
+        if (formSuccess) {
+            formSuccess.classList.add('hidden');
+        }
     }
 });
 </script>

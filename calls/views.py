@@ -13,19 +13,9 @@ def call_list(request):
     Çağrı kayıtlarının listesini gösterir.
     """
     # Kullanıcı rolüne göre çağrıları filtrele
-    if request.user.is_admin() or request.user.is_superuser:
-        # Yöneticiler tüm çağrıları görebilir
+    if request.user.is_admin() or request.user.is_superuser or request.user.is_expert():
+        # Yöneticiler ve kalite uzmanları tüm çağrıları görebilir
         calls = CallRecord.objects.all().order_by('-call_date')
-    elif request.user.is_expert():
-        # Kalite uzmanları henüz değerlendirilmemiş çağrıları ve kendi değerlendirdiklerini görebilir
-        evaluated_call_ids = Evaluation.objects.filter(
-            evaluator=request.user
-        ).values_list('call_id', flat=True)
-        
-        calls = CallRecord.objects.filter(
-            Q(id__in=evaluated_call_ids) | 
-            ~Q(id__in=Evaluation.objects.values_list('call_id', flat=True))
-        ).order_by('-call_date')
     else:
         # Müşteri temsilcileri sadece kendi çağrılarını görebilir
         calls = CallRecord.objects.filter(agent=request.user).order_by('-call_date')
@@ -91,11 +81,6 @@ def evaluate(request, call_id):
     
     call = get_object_or_404(CallRecord, id=call_id)
     
-    # Mevcut değerlendirme kontrolü
-    if Evaluation.objects.filter(call=call).exists():
-        messages.warning(request, "Bu çağrı zaten değerlendirilmiş.")
-        return redirect('calls:call_detail', call_id=call.id)
-    
     # Değerlendirme formunu seç
     evaluation_form = EvaluationForm.objects.first()
     
@@ -103,10 +88,17 @@ def evaluate(request, call_id):
         messages.error(request, "Değerlendirme formu bulunamadı. Lütfen önce bir form oluşturun.")
         return redirect('calls:call_list')
     
+    # Mevcut değerlendirme kontrolü
+    existing_evaluation = None
+    if Evaluation.objects.filter(call=call).exists():
+        existing_evaluation = Evaluation.objects.filter(call=call).first()
+        messages.info(request, "Bu çağrı daha önce değerlendirilmiş. Değerlendirme detaylarını görebilirsiniz.")
+    
     return render(request, 'calls/evaluate.html', {
         'form': None,  # API tabanlı form kullanıldığı için None
         'call': call,
         'evaluation_form': evaluation_form,
+        'existing_evaluation': existing_evaluation,
         'title': f'Değerlendirme - {call}'
     })
 

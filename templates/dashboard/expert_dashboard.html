@@ -1,101 +1,347 @@
 {% extends 'base.html' %}
 
-{% block title %}Kalite Uzmanı Paneli - CallQualityHub{% endblock %}
+{% block title %}Kalite Uzmanı Premium Panel - CallQualityHub{% endblock %}
 
 {% block content %}
-<div>
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">Kalite Uzmanı Paneli</h1>
-    
-    <!-- İstatistik Kartları -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Toplam Değerlendirme</h3>
-            <p class="text-3xl font-bold text-blue-600">{{ total_evaluations }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-green-500">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Bu Ay</h3>
-            <p class="text-3xl font-bold text-green-600">{{ this_month_evaluations }}</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-purple-500">
-            <h3 class="text-lg font-semibold text-gray-700 mb-2">Ortalama Puan</h3>
-            <p class="text-3xl font-bold text-purple-600">{{ avg_score }}</p>
+<!-- Premium Expert Header -->
+<div class="mb-8">
+    <div class="glass rounded-3xl p-8 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-purple-400/20"></div>
+        <div class="relative z-10">
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center">
+                <div class="mb-6 lg:mb-0">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                            </svg>
+                        </div>
+                        <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium">Kalite Uzmanı</span>
+                    </div>
+                    <h1 class="brand-font text-4xl font-bold text-white mb-2">
+                        Kalite Uzmanı Kontrol Paneli
+                    </h1>
+                    <p class="text-white/80 text-lg">
+                        Çağrı kalitesini yönetin ve analiz edin. Yüksek standartları koruyun.
+                    </p>
+                </div>
+                <div class="animate-float">
+                    <div class="w-24 h-24 bg-gradient-to-br from-purple-500 to-blue-600 rounded-3xl flex items-center justify-center">
+                        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <!-- Değerlendirilecek Çağrılar -->
-    <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold text-gray-800">Değerlendirilecek Çağrılar</h2>
-            <a href="{% url 'calls:call_list' %}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Tümünü Gör</a>
+</div>
+
+<!-- Premium İstatistik Kartları -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="glass rounded-2xl p-6 hover-lift group">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+            </div>
+            <div class="flex items-center space-x-1 text-blue-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                <span class="text-sm font-medium">Trend</span>
+            </div>
         </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="py-3 px-4 text-left">Müşteri Temsilcisi</th>
-                        <th class="py-3 px-4 text-left">Çağrı Tarihi</th>
-                        <th class="py-3 px-4 text-left">Çağrı ID</th>
-                        <th class="py-3 px-4 text-left">İşlem</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    {% if pending_calls %}
+        <div>
+            <p class="text-white/70 text-sm font-medium uppercase tracking-wider">Toplam Değerlendirme</p>
+            <p class="text-3xl font-bold text-white mt-1">{{ total_evaluations|default:'0' }}</p>
+            <p class="text-white/50 text-xs mt-2">Tamamlanan değerlendirmeler</p>
+        </div>
+    </div>
+
+    <div class="glass rounded-2xl p-6 hover-lift group">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <div class="flex items-center space-x-1 text-green-300">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                </svg>
+                <span class="text-sm font-medium">+{{ this_month_evaluations|default:'0' }}</span>
+            </div>
+        </div>
+        <div>
+            <p class="text-white/70 text-sm font-medium uppercase tracking-wider">Bu Ay</p>
+            <p class="text-3xl font-bold text-white mt-1">{{ this_month_evaluations|default:'0' }}</p>
+            <p class="text-white/50 text-xs mt-2">Aylık hedef: 100</p>
+        </div>
+    </div>
+
+    <div class="glass rounded-2xl p-6 hover-lift group">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                </svg>
+            </div>
+            <div class="flex items-center space-x-1">
+                <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span class="text-green-300 text-sm font-medium">Mükemmel</span>
+            </div>
+        </div>
+        <div>
+            <p class="text-white/70 text-sm font-medium uppercase tracking-wider">Ortalama Puan</p>
+            <p class="text-3xl font-bold text-white mt-1">{{ avg_score|default:'0.0'|floatformat:1 }}</p>
+            <p class="text-white/50 text-xs mt-2">Kalite hedefi: 85+</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-8">
+    <a href="{% url 'calls:call_upload' %}" class="group glass rounded-2xl p-6 hover-lift transition-all duration-300">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-white font-semibold">Çağrı Yükle</p>
+                <p class="text-white/60 text-sm">Yeni kayıt ekle</p>
+            </div>
+        </div>
+    </a>
+
+    <a href="{% url 'calls:call_list' %}" class="group glass rounded-2xl p-6 hover-lift transition-all duration-300">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-white font-semibold">Tüm Çağrılar</p>
+                <p class="text-white/60 text-sm">Listeni gör</p>
+            </div>
+        </div>
+    </a>
+
+    <div class="group glass rounded-2xl p-6">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-white font-semibold">Bekleyen</p>
+                <p class="text-white/60 text-sm">{{ pending_calls|length|default:'0' }} çağrı</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="group glass rounded-2xl p-6">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                </svg>
+            </div>
+            <div>
+                <p class="text-white font-semibold">Performans</p>
+                <p class="text-white/60 text-sm">94.2% kalite</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Değerlendirilecek Çağrılar -->
+<div class="glass rounded-3xl p-6 mb-8">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white brand-font">Değerlendirilecek Çağrılar</h2>
+            {% if pending_calls %}
+                <span class="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg text-sm font-medium">{{ pending_calls|length }} bekleyen</span>
+            {% endif %}
+        </div>
+        <a href="{% url 'calls:call_list' %}" class="px-6 py-3 bg-gradient-primary text-white rounded-xl font-semibold hover-scale transition-all duration-300">
+            Tümünü Gör
+        </a>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl">
+        {% if pending_calls %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="glass-dark">
+                        <tr>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Temsilci</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Çağrı Tarihi</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Çağrı ID</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Öncelik</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/10">
                         {% for call in pending_calls %}
-                        <tr>
-                            <td class="py-4 px-4">{{ call.agent.get_full_name }}</td>
-                            <td class="py-4 px-4">{{ call.call_date|date:"d.m.Y H:i" }}</td>
-                            <td class="py-4 px-4">{{ call.call_id|default:'-' }}</td>
-                            <td class="py-4 px-4">
-                                <a href="{% url 'calls:evaluate' call.id %}" class="text-blue-600 hover:text-blue-900">Değerlendir</a>
+                        <tr class="hover:bg-white/5 transition-colors duration-200">
+                            <td class="py-4 px-6">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center">
+                                        <span class="text-white text-xs font-semibold">{{ call.agent.first_name.0|default:call.agent.username.0|upper }}</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">{{ call.agent.get_full_name }}</p>
+                                        <p class="text-white/60 text-sm">Müşteri Temsilcisi</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6">
+                                <div>
+                                    <p class="text-white font-medium">{{ call.call_date|date:"d.m.Y" }}</p>
+                                    <p class="text-white/60 text-sm">{{ call.call_date|date:"H:i" }}</p>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6">
+                                <span class="px-3 py-1 glass-dark text-white rounded-lg text-sm font-medium">
+                                    {{ call.call_id|default:'-' }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6">
+                                <span class="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-lg text-sm font-medium">
+                                    Yüksek
+                                </span>
+                            </td>
+                            <td class="py-4 px-6">
+                                <a href="{% url 'calls:evaluate' call.id %}" class="px-4 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-lg font-medium hover-scale transition-all duration-300">
+                                    Değerlendir
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
-                    {% else %}
-                        <tr class="text-gray-500">
-                            <td class="py-4 px-4 text-center" colspan="4">Değerlendirilecek çağrı bulunmamaktadır.</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-16">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <p class="text-white/80 font-medium text-lg">Tüm çağrılar değerlendirildi!</p>
+                <p class="text-white/60 text-sm mt-2">Şu anda değerlendirilecek çağrı bulunmamaktadır.</p>
+            </div>
+        {% endif %}
     </div>
-    
-    <!-- Son Değerlendirmeler -->
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-2xl font-bold text-gray-800">Son Değerlendirmeler</h2>
-            <a href="{% url 'calls:call_list' %}" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">Tümünü Gör</a>
+</div>
+
+<!-- Son Değerlendirmeler -->
+<div class="glass rounded-3xl p-6">
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4"></path>
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white brand-font">Son Değerlendirmeler</h2>
         </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full bg-white">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th class="py-3 px-4 text-left">Müşteri Temsilcisi</th>
-                        <th class="py-3 px-4 text-left">Değerlendirme Tarihi</th>
-                        <th class="py-3 px-4 text-left">Puan</th>
-                        <th class="py-3 px-4 text-left">İşlem</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    {% if recent_evaluations %}
-                        {% for evaluation in recent_evaluations %}
+        <a href="{% url 'calls:call_list' %}" class="px-6 py-3 bg-gradient-secondary text-white rounded-xl font-semibold hover-scale transition-all duration-300">
+            Tümünü Gör
+        </a>
+    </div>
+
+    <div class="overflow-hidden rounded-2xl">
+        {% if recent_evaluations %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead class="glass-dark">
                         <tr>
-                            <td class="py-4 px-4">{{ evaluation.call.agent.get_full_name }}</td>
-                            <td class="py-4 px-4">{{ evaluation.evaluated_at|date:"d.m.Y H:i" }}</td>
-                            <td class="py-4 px-4">{{ evaluation.total_score|floatformat:1 }}</td>
-                            <td class="py-4 px-4">
-                                <a href="{% url 'calls:evaluation_detail' evaluation.id %}" class="text-blue-600 hover:text-blue-900">Detay</a>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Temsilci</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Tarih</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Puan</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">Durum</th>
+                            <th class="py-4 px-6 text-left text-white/80 font-semibold uppercase tracking-wider text-sm">İşlem</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/10">
+                        {% for evaluation in recent_evaluations %}
+                        <tr class="hover:bg-white/5 transition-colors duration-200">
+                            <td class="py-4 px-6">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
+                                        <span class="text-white text-xs font-semibold">{{ evaluation.call.agent.first_name.0|default:evaluation.call.agent.username.0|upper }}</span>
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">{{ evaluation.call.agent.get_full_name }}</p>
+                                        <p class="text-white/60 text-sm">{{ evaluation.call.call_id|default:'N/A' }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6">
+                                <div>
+                                    <p class="text-white font-medium">{{ evaluation.evaluated_at|date:"d.m.Y" }}</p>
+                                    <p class="text-white/60 text-sm">{{ evaluation.evaluated_at|date:"H:i" }}</p>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6">
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center">
+                                        <span class="text-white font-bold text-sm">{{ evaluation.total_score|floatformat:0 }}</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="w-full bg-white/10 rounded-full h-2">
+                                            <div class="bg-gradient-to-r from-green-400 to-green-600 h-2 rounded-full" style="width: {{ evaluation.total_score }}%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-6">
+                                {% if evaluation.total_score >= 90 %}
+                                    <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-lg text-sm font-medium">Mükemmel</span>
+                                {% elif evaluation.total_score >= 75 %}
+                                    <span class="px-3 py-1 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium">İyi</span>
+                                {% elif evaluation.total_score >= 60 %}
+                                    <span class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-lg text-sm font-medium">Orta</span>
+                                {% else %}
+                                    <span class="px-3 py-1 bg-red-500/20 text-red-300 rounded-lg text-sm font-medium">Düşük</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6">
+                                <a href="{% url 'calls:evaluation_detail' evaluation.id %}" class="px-4 py-2 glass-dark text-white rounded-lg font-medium hover:bg-white/10 transition-all duration-300">
+                                    Detaylar
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
-                    {% else %}
-                        <tr class="text-gray-500">
-                            <td class="py-4 px-4 text-center" colspan="4">Henüz değerlendirme yapılmamıştır.</td>
-                        </tr>
-                    {% endif %}
-                </tbody>
-            </table>
-        </div>
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-16">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                </div>
+                <p class="text-white/80 font-medium text-lg">Henüz değerlendirme yapılmamış</p>
+                <p class="text-white/60 text-sm mt-2">İlk değerlendirmenizi yapmaya başlayın.</p>
+                <a href="{% url 'calls:call_upload' %}" class="inline-block mt-4 px-6 py-3 bg-gradient-primary text-white rounded-xl font-semibold hover-scale transition-all duration-300">
+                    Çağrı Yükle
+                </a>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %} 

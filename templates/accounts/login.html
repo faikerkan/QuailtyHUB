@@ -1,48 +1,258 @@
 {% extends 'base.html' %}
 
-{% block title %}Giriş Yap - CallQualityHub{% endblock %}
+{% block title %}Premium Giriş - CallQualityHub{% endblock %}
 
 {% block content %}
-<div class="max-w-md mx-auto">
-    <h1 class="text-2xl font-bold text-center mb-6">Giriş Yap</h1>
-    
-    {% if messages %}
-    <div class="mb-4">
-        {% for message in messages %}
-        <div class="p-4 mb-4 {% if message.tags == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %} rounded-md">
-            {{ message }}
+<!-- Premium Login Container -->
+<div class="min-h-[600px] flex items-center justify-center py-12">
+    <div class="w-full max-w-lg">
+        <!-- Premium Login Card -->
+        <div class="glass rounded-3xl p-8 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary-400/10 to-secondary-400/10"></div>
+            <div class="relative z-10">
+                <!-- Header Section -->
+                <div class="text-center mb-8">
+                    <div class="animate-float mb-6">
+                        <div class="w-20 h-20 bg-gradient-primary rounded-3xl flex items-center justify-center mx-auto animate-glow">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <h1 class="brand-font text-3xl font-bold text-white mb-2">
+                        Hoş Geldiniz!
+                    </h1>
+                    <p class="text-white/70 text-lg">
+                        CallQualityHub premium hesabınıza giriş yapın
+                    </p>
+                </div>
+
+                <!-- Messages -->
+                {% if messages %}
+                <div class="mb-6 space-y-3">
+                    {% for message in messages %}
+                    <div class="glass-dark rounded-2xl p-4 {% if message.tags == 'error' %}border border-red-400/20{% else %}border border-green-400/20{% endif %}">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 {% if message.tags == 'error' %}bg-red-500/20{% else %}bg-green-500/20{% endif %} rounded-lg flex items-center justify-center">
+                                {% if message.tags == 'error' %}
+                                <svg class="w-4 h-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {% else %}
+                                <svg class="w-4 h-4 text-green-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                {% endif %}
+                            </div>
+                            <p class="{% if message.tags == 'error' %}text-red-300{% else %}text-green-300{% endif %} font-medium">
+                                {{ message }}
+                            </p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Premium Login Form -->
+                <form method="post" id="login-form" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    <!-- Username Field -->
+                    <div class="space-y-2">
+                        <label for="id_username" class="block text-white/80 text-sm font-semibold uppercase tracking-wider">
+                            Kullanıcı Adı
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                id="id_username" 
+                                name="username" 
+                                type="text" 
+                                required 
+                                class="glass-dark w-full pl-12 pr-4 py-4 text-white placeholder-white/40 border border-white/10 rounded-2xl focus:ring-2 focus:ring-primary-400 focus:border-primary-400 transition-all duration-300"
+                                placeholder="Kullanıcı adınızı girin"
+                                autocomplete="username"
+                            >
+                        </div>
+                        {% if form.username.errors %}
+                        <div class="flex items-center space-x-2 mt-2">
+                            <svg class="w-4 h-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-red-300 text-sm">{{ form.username.errors.0 }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="space-y-2">
+                        <label for="id_password" class="block text-white/80 text-sm font-semibold uppercase tracking-wider">
+                            Şifre
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <svg class="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <input 
+                                id="id_password" 
+                                name="password" 
+                                type="password" 
+                                required 
+                                class="glass-dark w-full pl-12 pr-12 py-4 text-white placeholder-white/40 border border-white/10 rounded-2xl focus:ring-2 focus:ring-primary-400 focus:border-primary-400 transition-all duration-300"
+                                placeholder="Şifrenizi girin"
+                                autocomplete="current-password"
+                            >
+                            <button 
+                                type="button" 
+                                class="absolute inset-y-0 right-0 pr-4 flex items-center"
+                                onclick="togglePassword()"
+                            >
+                                <svg id="eye-icon" class="w-5 h-5 text-white/40 hover:text-white/60 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        {% if form.password.errors %}
+                        <div class="flex items-center space-x-2 mt-2">
+                            <svg class="w-4 h-4 text-red-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-red-300 text-sm">{{ form.password.errors.0 }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Remember Me & Forgot Password -->
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember_me" class="w-4 h-4 text-primary-600 border border-white/20 rounded focus:ring-primary-500 bg-white/10">
+                            <span class="ml-3 text-white/70 text-sm">Beni hatırla</span>
+                        </label>
+                        <a href="#" class="text-primary-300 hover:text-primary-200 text-sm font-medium transition-colors">
+                            Şifremi unuttum
+                        </a>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button 
+                        type="submit" 
+                        class="w-full py-4 px-6 bg-gradient-primary text-white font-semibold rounded-2xl hover-scale hover:shadow-2xl focus:ring-4 focus:ring-primary-400/50 transition-all duration-300 relative overflow-hidden group"
+                    >
+                        <span class="relative z-10 flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                            </svg>
+                            <span>Güvenli Giriş</span>
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-primary-600 to-secondary-600 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></div>
+                    </button>
+                </form>
+
+                <!-- Additional Info -->
+                <div class="mt-8 pt-6 border-t border-white/10">
+                    <div class="text-center space-y-4">
+                        <p class="text-white/60 text-sm">
+                            Hesabınız yok mu?
+                            <a href="#" class="text-primary-300 hover:text-primary-200 font-medium transition-colors">
+                                Kayıt olun
+                            </a>
+                        </p>
+                        
+                        <!-- Security Features -->
+                        <div class="flex items-center justify-center space-x-6 text-white/40 text-xs">
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                                </svg>
+                                <span>256-bit SSL</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                </svg>
+                                <span>Güvenli Oturum</span>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                                <span>Hızlı Erişim</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        {% endfor %}
     </div>
-    {% endif %}
-    
-    <form method="post" id="login-form" class="bg-white shadow-md rounded-lg p-6">
-        {% csrf_token %}
-        <div class="mb-4">
-            <label for="id_username" class="block text-gray-700 text-sm font-bold mb-2">
-                Kullanıcı Adı
-            </label>
-            <input id="id_username" name="username" type="text" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Kullanıcı Adı">
-            {% if form.username.errors %}
-            <p class="text-red-500 text-xs italic mt-1">{{ form.username.errors.0 }}</p>
-            {% endif %}
-        </div>
-        
-        <div class="mb-6">
-            <label for="id_password" class="block text-gray-700 text-sm font-bold mb-2">
-                Şifre
-            </label>
-            <input id="id_password" name="password" type="password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Şifre">
-            {% if form.password.errors %}
-            <p class="text-red-500 text-xs italic mt-1">{{ form.password.errors.0 }}</p>
-            {% endif %}
-        </div>
-        
-        <div class="flex items-center justify-between">
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                Giriş Yap
-            </button>
-        </div>
-    </form>
 </div>
+
+<!-- JavaScript for Enhanced Interactions -->
+<script>
+function togglePassword() {
+    const passwordInput = document.getElementById('id_password');
+    const eyeIcon = document.getElementById('eye-icon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        eyeIcon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"></path>
+        `;
+    } else {
+        passwordInput.type = 'password';
+        eyeIcon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+        `;
+    }
+}
+
+// Form validation and animation
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('login-form');
+    const inputs = form.querySelectorAll('input[required]');
+    
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'scale(1.02)';
+            this.parentElement.style.transition = 'transform 0.2s ease';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'scale(1)';
+        });
+        
+        input.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.classList.add('border-green-400/50');
+                this.classList.remove('border-white/10');
+            } else {
+                this.classList.remove('border-green-400/50');
+                this.classList.add('border-white/10');
+            }
+        });
+    });
+    
+    // Form submission animation
+    form.addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.innerHTML = `
+            <div class="flex items-center justify-center space-x-2">
+                <svg class="animate-spin w-5 h-5 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Giriş yapılıyor...</span>
+            </div>
+        `;
+        submitBtn.disabled = true;
+    });
+});
+</script>
 {% endblock %} 

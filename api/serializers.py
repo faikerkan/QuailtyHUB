@@ -109,16 +109,13 @@ class EvaluationFormSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'fields']
 
     def validate_fields(self, value):
-        if not isinstance(value, list) or not value:
-            raise serializers.ValidationError("Alanlar listesi boş olamaz ve bir liste olmalıdır.")
-        
-        for field in value:
-            if not all(k in field for k in ("key", "label", "type", "max_score")):
-                raise serializers.ValidationError("Her alan 'key', 'label', 'type', 'max_score' içermelidir.")
-            
+        if not isinstance(value, dict) or not value:
+            raise serializers.ValidationError("Alanlar sözlük (dict) olmalı ve boş olmamalı.")
+        for key, field in value.items():
+            if not all(k in field for k in ("label", "type", "max_score")):
+                raise serializers.ValidationError("Her alan 'label', 'type', 'max_score' içermelidir.")
             if not isinstance(field['max_score'], (int, float)) or field['max_score'] <= 0:
                 raise serializers.ValidationError("max_score pozitif bir sayı olmalıdır.")
-        
         return value
 
     def validate_name(self, value):
@@ -162,10 +159,9 @@ class EvaluationCreateSerializer(serializers.ModelSerializer):
             return value
 
         form_instance = EvaluationForm.objects.get(id=form)
-        for field in form_instance.fields:
-            key = field['key']
+        for key, field in form_instance.fields.items():
             max_score = field['max_score']
-            if key in value and value[key] > max_score:
+            if key in value and value[key]['score'] > max_score:
                 raise serializers.ValidationError(f"{key} için maksimum puan {max_score} olabilir.")
         return value
 
@@ -177,10 +173,10 @@ class EvaluationCreateSerializer(serializers.ModelSerializer):
         max_points = Decimal('0')
 
         if form and hasattr(form, 'fields'):
-            for field in form.fields:
-                key = field.get('key')
+            for key, field in form.fields.items():
                 max_score = Decimal(str(field.get('max_score', 0)))
-                value = Decimal(str(scores.get(key, 0)))
+                score_dict = scores.get(key, {})
+                value = Decimal(str(score_dict.get('score', 0)))
                 total_points += value
                 max_points += max_score
 
