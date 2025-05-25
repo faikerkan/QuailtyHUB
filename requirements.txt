@@ -3,7 +3,7 @@
 # Core Django Dependencies
 # ====================
 Django>=4.2.21,<5.0.0
-djangorestframework>=3.15.0
+djangorestframework>=3.16.0
 django-cors-headers>=4.0.0
 
 # ====================
@@ -31,13 +31,13 @@ django-allauth>=0.57.0
 # ====================
 # Media & File Handling
 # ====================
-Pillow>=10.3.0,<11.0.0
+Pillow>=10.4.0,<11.0.0
 django-storages>=1.13.0  # For cloud storage (AWS S3, etc.)
 
 # ====================
 # Production Server
 # ====================
-gunicorn>=22.0.0
+gunicorn>=23.0.0
 whitenoise>=6.5.0
 
 # ====================
@@ -52,7 +52,7 @@ coverage>=7.0.0
 # ====================
 # Code Quality
 # ====================
-black>=24.0.0
+black>=25.1.0
 flake8>=6.0.0
 isort>=5.12.0
 mypy>=1.0.0
@@ -61,20 +61,20 @@ mypy>=1.0.0
 # Security
 # ====================
 bandit>=1.7.5
-safety>=3.0.0
+safety>=3.5.1
 
 # ====================
 # Monitoring & Logging
 # ====================
-sentry-sdk>=2.0.0
+sentry-sdk>=2.29.1
 django-extensions>=3.2.0
 
 # ====================
 # Performance & Caching
 # ====================
-redis>=5.0.0
+redis==6.0.0b2  # Safety-MCP recommended secure version
 django-redis>=5.4.0
-celery>=5.3.0
+celery>=5.5.2
 
 # ====================
 # API Documentation
@@ -84,7 +84,7 @@ drf-spectacular>=0.26.0
 # ====================
 # Utilities
 # ====================
-requests>=2.32.0
+requests>=2.32.3
 python-slugify>=8.0.0
 django-filter>=23.0.0
 django-crispy-forms>=2.0.0 
