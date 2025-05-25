@@ -17,6 +17,11 @@ python-dotenv>=1.0.0
 python-decouple>=3.6
 
 # ====================
+# Frontend & UI
+# ====================
+django-tailwind>=3.6.0
+
+# ====================
 # Authentication & Security
 # ====================
 djangorestframework-simplejwt>=5.2.0
