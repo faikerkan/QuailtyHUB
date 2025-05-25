@@ -102,9 +102,7 @@ jobs:
       run: bandit -r calls/ users/ qualityhub/ api/ manage.py --skip B101,B106
 
     - name: Check for security vulnerabilities
-      env:
-        SAFETY_API_KEY: ${{ secrets.SAFETY_API_KEY }}
-      run: safety check --full-report
+      run: safety scan --key ${{ secrets.SAFETY_API_KEY }} --ci 
 
   # Code Quality
   code-quality:
