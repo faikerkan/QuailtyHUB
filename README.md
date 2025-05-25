@@ -1,320 +1,358 @@
-# 🎯 CallQualityHub - Premium Çağrı Merkezi Kalite Yönetim Sistemi
+# 📞 CallQualityHub - Premium Çağrı Kalite Yönetim Sistemi
 
-[![Django](https://img.shields.io/badge/Django-4.2-green)](https://djangoproject.com/)
-[![Python](https://img.shields.io/badge/Python-3.8+-blue)](https://python.org/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-blue)](https://postgresql.org/)
-[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.0-06B6D4)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+<div align="center">
 
-**CallQualityHub**, çağrı merkezi operasyonlarında kalite değerlendirme süreçlerini web tabanlı ve dinamik şekilde yönetmek için geliştirilmiş modern bir uygulamadır. Premium tasarımı, glassmorphism efektleri ve gelişmiş animasyonları ile 2025 standartlarına uygun profesyonel bir deneyim sunar.
+![CallQualityHub](docs/images/dashboard-preview.png)
 
-![CallQualityHub Dashboard](docs/images/dashboard-preview.png)
+[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://python.org/)
+[![Django](https://img.shields.io/badge/Django-4.2+-green.svg)](https://djangoproject.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-## ✨ Öne Çıkan Özellikler
+**Modern, güvenli ve kullanıcı dostu çağrı merkezi kalite değerlendirme sistemi**
 
-### 🔐 **Rol Tabanlı Güvenlik Sistemi**
-- **Yönetici**: Tüm sistem yönetimi ve kullanıcı kontrolü
-- **Kalite Uzmanı**: Değerlendirme formları ve kalite kontrol
-- **Müşteri Temsilcisi**: Kişisel performans görüntüleme
+[Demo](#demo) • [Kurulum](#kurulum) • [Kullanım](#kullanım) • [API](#api-dokümantasyonu) • [Katkıda Bulunma](#katkıda-bulunma)
 
-### 📊 **Dinamik Değerlendirme Sistemi**
-- Özelleştirilebilir değerlendirme formları
-- JSON tabanlı esnek puanlama sistemi
-- Gerçek zamanlı performans takibi
-- Detaylı analitik raporlar
+</div>
 
-### 🎨 **Premium Kullanıcı Arayüzü**
-- Modern glassmorphism tasarım sistemi
-- Smooth animasyonlar ve hover efektleri
-- Responsive tasarım (mobil uyumlu)
-- Dark theme ve professional color palette
+## ✨ Özellikler
 
-### 🔊 **Medya Yönetimi**
-- Çağrı kayıtlarının güvenli yüklenmesi
-- Audio player entegrasyonu
-- Dosya yönetimi ve arşivleme
+### 🎯 Ana Özellikler
+- **Rol Tabanlı Erişim**: Admin, Kalite Uzmanı ve Temsilci rolleri
+- **Ses Dosyası Yönetimi**: Çağrı kayıtlarını yükleme ve organize etme
+- **Dinamik Değerlendirme Formları**: Özelleştirilebilir değerlendirme kriterleri
+- **Gerçek Zamanlı Raporlama**: Detaylı analytics ve performans metrikleri
+- **REST API**: Tam özellikli API desteği
 
-### 📈 **Analytics & Reporting**
-- Gerçek zamanlı istatistikler
-- Performance tracking
-- Trend analizi
-- Export fonksiyonları
+### 🎨 Kullanıcı Deneyimi
+- **Modern UI/UX**: Glassmorphism tasarım dili
+- **Responsive Design**: Tüm cihazlarda mükemmel görünüm
+- **Dark Theme**: Göz dostu karanlık tema
+- **Premium Animasyonlar**: Akıcı geçişler ve hover efektleri
 
-## 🏗️ Teknoloji Stack
-
-| Kategori | Teknoloji |
-|----------|-----------|
-| **Backend** | Django 4.2, Django REST Framework |
-| **Frontend** | Django Templates, TailwindCSS 3.0 |
-| **Database** | PostgreSQL 15+ |
-| **Authentication** | Django Auth, Role-based permissions |
-| **UI/UX** | Glassmorphism, CSS Animations, Inter & Poppins fonts |
-| **Deployment** | Gunicorn, Nginx, WhiteNoise |
+### 🔒 Güvenlik
+- **JWT Authentication**: Güvenli kimlik doğrulama
+- **CSRF Protection**: Cross-site request forgery koruması
+- **SQL Injection Protection**: ORM tabanlı güvenlik
+- **File Upload Security**: Güvenli dosya yükleme
 
 ## 🚀 Hızlı Başlangıç
 
 ### Ön Gereksinimler
 
 ```bash
-# Gerekli yazılımlar
-Python 3.8+
-PostgreSQL 15+
-Node.js 16+ (TailwindCSS için)
+# Sistem gereksinimleri
+Python 3.9+
+PostgreSQL 12+
+Git
 ```
 
-### 1️⃣ Kurulum
+### ⚡ Hızlı Kurulum
 
 ```bash
-# Repository'yi klonlayın
-git clone https://github.com/username/callqualityhub.git
-cd callqualityhub
+# 1. Projeyi klonlayın
+git clone https://github.com/your-username/CallQualityHub.git
+cd CallQualityHub
 
-# Sanal ortam oluşturun
+# 2. Virtual environment oluşturun
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
-# .venv\Scripts\activate  # Windows
+# .venv\Scripts\activate   # Windows
 
-# Bağımlılıkları yükleyin
+# 3. Bağımlılıkları yükleyin
 pip install -r requirements.txt
+
+# 4. Çevre değişkenlerini ayarlayın
+cp .env-sample .env
+# .env dosyasını düzenleyin
+
+# 5. Veritabanını hazırlayın
+python manage.py migrate
+python manage.py createsuperuser
+
+# 6. Sunucuyu başlatın
+python manage.py runserver
 ```
 
-### 2️⃣ Veritabanı Kurulumu
+🎉 **Tebrikler!** CallQualityHub artık http://127.0.0.1:8000 adresinde çalışıyor.
+
+## ⚙️ Detaylı Kurulum
+
+### 1. PostgreSQL Kurulumu
+
+```bash
+# Ubuntu/Debian
+sudo apt-get install postgresql postgresql-contrib
+
+# macOS (Homebrew)
+brew install postgresql
+
+# Windows
+# PostgreSQL'i resmi siteden indirin
+```
+
+### 2. Veritabanı Oluşturma
 
 ```sql
--- PostgreSQL'e bağlanın ve şu komutları çalıştırın:
+-- PostgreSQL shell'de çalıştırın
 CREATE DATABASE qualityhub;
-CREATE USER qualityhubuser WITH PASSWORD 'qualityhub123';
-ALTER ROLE qualityhubuser SET client_encoding TO 'utf8';
-ALTER ROLE qualityhubuser SET default_transaction_isolation TO 'read committed';
-ALTER ROLE qualityhubuser SET timezone TO 'Europe/Istanbul';
+CREATE USER qualityhubuser WITH PASSWORD 'güçlü_şifre_buraya';
 GRANT ALL PRIVILEGES ON DATABASE qualityhub TO qualityhubuser;
 ```
 
-### 3️⃣ Konfigürasyon
+### 3. Çevre Değişkenleri (.env)
 
-```bash
-# Environment dosyasını oluşturun
-cp .env-sample .env
+```env
+# Django Ayarları
+SECRET_KEY=your-super-secret-key-here
+DEBUG=False
+ALLOWED_HOSTS=localhost,127.0.0.1,yourdomain.com
 
-# .env dosyasını düzenleyin (veritabanı bilgileri vs.)
-nano .env
+# PostgreSQL Veritabanı
+DB_NAME=qualityhub
+DB_USER=qualityhubuser
+DB_PASSWORD=güçlü_şifre_buraya
+DB_HOST=localhost
+DB_PORT=5432
+
+# E-posta Ayarları (Opsiyonel)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
 ```
 
-### 4️⃣ Django Setup
+### 4. İlk Verileri Yükleme
 
 ```bash
-# Migrasyonları uygulayın
-python manage.py migrate
+# Örnek verileri yüklemek için
+python manage.py loaddata fixtures/sample_data.json
 
-# Süper kullanıcı oluşturun
-python manage.py createsuperuser
-
-# TailwindCSS kurulumu
-python manage.py tailwind install
-
-# Statik dosyaları toplayın
-python manage.py collectstatic --noinput
+# Veya manuel olarak admin panelinden kullanıcı ve form oluşturun
 ```
 
-### 5️⃣ Sunucuyu Başlatın
+## 💻 Kullanım
 
-```bash
-# Geliştirme sunucusu
-python manage.py runserver
+### Kullanıcı Rolleri
 
-# TailwindCSS watch (ayrı terminal)
-python manage.py tailwind start
-```
+#### 👑 **Admin (Yönetici)**
+- Tüm sistem ayarlarına erişim
+- Kullanıcı yönetimi
+- Değerlendirme formları oluşturma
+- Sistem raporları görüntüleme
 
-🎉 **Hazır!** `http://localhost:8000` adresinden uygulamaya erişebilirsiniz.
+#### 🔍 **Kalite Uzmanı**
+- Çağrı kayıtları yükleme
+- Değerlendirme yapma
+- Kendi raporlarını görüntüleme
 
-## 📱 Ekran Görüntüleri
+#### 👤 **Temsilci**
+- Kendi değerlendirmelerini görüntüleme
+- Performans raporlarına erişim
 
-### Dashboard
-![Dashboard](docs/images/dashboard.png)
+### Temel İşlem Akışı
 
-### Login Page
-![Login](docs/images/login.png)
+1. **Çağrı Kaydı Yükleme**: Kalite uzmanı ses dosyasını sisteme yükler
+2. **Değerlendirme Yapma**: Belirlenen kriterlere göre değerlendirme
+3. **Rapor Oluşturma**: Otomatik olarak performans raporları oluşturulur
+4. **Geribildirim**: Temsilci sonuçları görüntüler ve gelişim alanlarını belirler
 
-### User Management
-![Users](docs/images/users.png)
-
-### Call Evaluation
-![Evaluation](docs/images/evaluation.png)
-
-## 🔧 Geliştirici Kılavuzu
+## 🛠️ Geliştirme
 
 ### Proje Yapısı
 
 ```
-callqualityhub/
-├── accounts/           # Kullanıcı yönetimi
-├── calls/             # Çağrı kayıtları ve değerlendirme
-├── dashboard/         # Dashboard views
+CallQualityHub/
+├── accounts/          # Kullanıcı yönetimi
+├── calls/            # Çağrı kayıtları ve değerlendirmeler
+├── dashboard/        # Dashboard ve raporlar
 ├── api/              # REST API endpoints
-├── templates/        # Django templates
-├── static/          # Statik dosyalar
-├── media/           # Kullanıcı yükleme dosyaları
-├── tests/           # Test dosyaları
-└── docs/            # Dokümantasyon
-```
-
-### API Endpoints
-
-```bash
-# Kullanıcı yönetimi
-GET    /api/users/
-POST   /api/users/
-GET    /api/users/{id}/
-
-# Çağrı yönetimi
-GET    /api/calls/
-POST   /api/calls/
-GET    /api/calls/{id}/
-
-# Değerlendirme formları
-GET    /api/evaluation-forms/
-POST   /api/evaluation-forms/
+├── templates/        # HTML şablonlar
+├── static/           # Statik dosyalar (CSS, JS, resimler)
+├── media/            # Yüklenen dosyalar
+├── docs/             # Proje dokümantasyonu
+└── tests/            # Test dosyaları
 ```
 
 ### Test Çalıştırma
 
 ```bash
 # Tüm testleri çalıştır
-pytest
-
-# Django testleri
 python manage.py test
 
-# Coverage raporu
-pytest --cov=.
+# Specific app testleri
+python manage.py test accounts
+python manage.py test calls
+
+# Coverage ile
+pip install coverage
+coverage run --source='.' manage.py test
+coverage report
 ```
 
-## 🏭 Production Deployment
-
-### Docker ile Deployment
+### Kod Kalitesi
 
 ```bash
-# Docker imajı oluştur
+# Linting
+pip install flake8
+flake8 .
+
+# Type checking
+pip install mypy
+mypy .
+
+# Security check
+pip install bandit
+bandit -r .
+```
+
+## 📊 API Dokümantasyonu
+
+### Authentication
+
+```bash
+# Token almak için
+curl -X POST http://localhost:8000/api/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "admin", "password": "password"}'
+```
+
+### Endpoints
+
+```bash
+# Kullanıcılar
+GET    /api/users/          # Kullanıcı listesi
+POST   /api/users/          # Yeni kullanıcı
+GET    /api/users/{id}/     # Kullanıcı detayı
+
+# Çağrılar
+GET    /api/calls/          # Çağrı listesi
+POST   /api/calls/          # Yeni çağrı
+GET    /api/calls/{id}/     # Çağrı detayı
+
+# Değerlendirmeler
+GET    /api/evaluations/    # Değerlendirme listesi
+POST   /api/evaluations/    # Yeni değerlendirme
+GET    /api/evaluations/{id}/  # Değerlendirme detayı
+```
+
+Detaylı API dokümantasyonu için: http://localhost:8000/api/docs/
+
+## 🚀 Production Deployment
+
+### Docker ile Deploy
+
+```bash
+# Docker image oluştur
 docker build -t callqualityhub .
 
 # Docker Compose ile çalıştır
 docker-compose up -d
 ```
 
-### Manual Deployment (Ubuntu/Debian)
+### Heroku Deploy
 
 ```bash
-# Sistem güncellemesi
-sudo apt update && sudo apt upgrade -y
-
-# Gerekli paketler
-sudo apt install python3-venv python3-dev libpq-dev postgresql postgresql-contrib nginx
-
-# Proje deployment
-git clone https://github.com/username/callqualityhub.git /var/www/callqualityhub
-cd /var/www/callqualityhub
-
-# Production kurulumu
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# Production ayarları
-cp .env-sample .env
-# .env dosyasını production değerleri ile düzenleyin
-
-# Statik dosyalar ve migrasyonlar
-python manage.py collectstatic --noinput
-python manage.py migrate
-
-# Gunicorn ve Nginx konfigürasyonu
-# (Detaylı kılavuz için docs/deployment.md dosyasına bakın)
+# Heroku CLI kurulumu sonrası
+heroku create your-app-name
+heroku addons:create heroku-postgresql:hobby-dev
+heroku config:set DEBUG=False
+git push heroku main
+heroku run python manage.py migrate
+heroku run python manage.py createsuperuser
 ```
 
-## 🧪 Testing
-
-Proje kapsamlı test coverage'ına sahiptir:
+### Manuel Server Kurulumu
 
 ```bash
-# Unit testler
-python manage.py test accounts
-python manage.py test calls
-python manage.py test dashboard
+# Gunicorn kurulumu
+pip install gunicorn
 
-# Integration testler
-pytest tests/integration/
+# Static dosyaları topla
+python manage.py collectstatic
 
-# End-to-end testler
-pytest tests/e2e/
+# Gunicorn ile çalıştır
+gunicorn call_quality_hub.wsgi:application --bind 0.0.0.0:8000
 ```
 
-## 🔒 Güvenlik
+## 🔧 Konfigürasyon
 
-- CSRF koruması aktif
-- SQL Injection koruması
-- XSS koruması
-- Rol tabanlı erişim kontrolü
-- Secure headers (production)
-- Rate limiting
+### Performance Optimizasyonu
 
-## 📈 Performance
+```python
+# settings.py'de cache ayarları
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
+}
+```
 
-- Database query optimization
-- Static file compression
-- CDN ready
-- Caching system
-- Lazy loading
+### Güvenlik Ayarları
+
+```python
+# Production için önerilen ayarlar
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_HSTS_SECONDS = 31536000
+```
 
 ## 🤝 Katkıda Bulunma
 
-1. Fork edin
-2. Feature branch oluşturun: `git checkout -b feature/amazing-feature`
-3. Değişikliklerinizi commit edin: `git commit -m 'feat: add amazing feature'`
-4. Branch'inizi push edin: `git push origin feature/amazing-feature`
-5. Pull Request oluşturun
+CallQualityHub'a katkıda bulunmak istiyorsanız:
 
-### Katkı Kuralları
+1. **Fork** edin
+2. **Feature branch** oluşturun (`git checkout -b feature/amazing-feature`)
+3. **Commit** yapın (`git commit -m 'feat: add amazing feature'`)
+4. **Push** edin (`git push origin feature/amazing-feature`)
+5. **Pull Request** açın
 
-- Code style: PEP 8
-- Commit messages: Conventional Commits
-- Test coverage: minimum %80
-- Dokümantasyon güncellemesi gerekli
+Detaylı bilgi için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını okuyun.
 
-## 📋 Roadmap
+### 🐛 Hata Bildirimi
 
-- [ ] **v2.0** - Real-time notifications
-- [ ] **v2.1** - Advanced reporting dashboard
-- [ ] **v2.2** - Mobile app
-- [ ] **v2.3** - AI-powered quality scoring
-- [ ] **v2.4** - Multi-language support
+Hata bulduysanız lütfen [issue açın](https://github.com/your-username/CallQualityHub/issues) ve şunları belirtin:
 
-## 📞 Destek & İletişim
+- Hatanın tanımı
+- Adım adım nasıl tekrarlanacağı
+- Beklenen davranış
+- Ekran görüntüleri (varsa)
+- Sistem bilgileri
 
-- **Documentation**: [Wiki](https://github.com/username/callqualityhub/wiki)
-- **Issues**: [GitHub Issues](https://github.com/username/callqualityhub/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/username/callqualityhub/discussions)
-- **Email**: admin@callqualityhub.com
+## 📝 Lisans
 
-## 📄 Lisans
+Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
 
-Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır. Detaylar için LICENSE dosyasına bakın.
+## 👥 Takım
+
+- **Geliştirici**: [Your Name](https://github.com/your-username)
+- **Design**: Modern Glassmorphism UI/UX
+- **Backend**: Django REST Framework
+- **Frontend**: TailwindCSS + Vanilla JS
 
 ## 🙏 Teşekkürler
 
-Bu projeyi mümkün kılan harika açık kaynak projelere teşekkürler:
+Bu projeyi mümkün kılan harika açık kaynak projelerine teşekkürler:
 
 - [Django](https://djangoproject.com/) - Web framework
 - [TailwindCSS](https://tailwindcss.com/) - CSS framework
-- [PostgreSQL](https://postgresql.org/) - Database
-- [Heroicons](https://heroicons.com/) - SVG icons
+- [PostgreSQL](https://postgresql.org/) - Veritabanı
+- [Django REST Framework](https://django-rest-framework.org/) - API
+
+## 📞 İletişim
+
+- **Email**: your-email@example.com
+- **LinkedIn**: [Your LinkedIn](https://linkedin.com/in/your-profile)
+- **Twitter**: [@your-twitter](https://twitter.com/your-twitter)
 
 ---
 
 <div align="center">
 
-**CallQualityHub ile çağrı merkezi kalite yönetimini bir üst seviyeye taşıyın! 🚀**
+**⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!**
 
-[⭐ Star](https://github.com/username/callqualityhub) | [🐛 Report Bug](https://github.com/username/callqualityhub/issues) | [💡 Request Feature](https://github.com/username/callqualityhub/issues)
+Made with ❤️ by [Your Name](https://github.com/your-username)
 
 </div> 

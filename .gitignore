@@ -27,11 +27,14 @@ var/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-media
+media/call_records/
 !media/.gitkeep
+!media/call_records/.gitkeep
 
 # Environments
 .env
+.env.local
+.env.production
 .venv
 env/
 venv/
@@ -47,6 +50,11 @@ venv.bak/
 
 # OS specific
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # TailwindCSS
@@ -56,4 +64,37 @@ npm-debug.log
 yarn-error.log
 
 # Static files
-staticfiles/ 
+staticfiles/
+collected_static/
+
+# Logs
+logs/
+*.log
+
+# Database backups
+*.sql
+*.backup
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Test files
+.pytest_cache/
+.cache
+
+# Security
+*.pem
+*.key
+*.crt
+
+# Temporary files
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+*~
