@@ -4,8 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import redirect, render
 
-from .forms import (CustomUserChangeForm, CustomUserCreationForm, LoginForm,
-                    ProfileForm)
+from .forms import CustomUserChangeForm, CustomUserCreationForm, LoginForm, ProfileForm
 from .models import CustomUser
 
 

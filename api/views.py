@@ -1,7 +1,5 @@
 import os
 
-from django.db.models import Q
-from django.shortcuts import render
 from rest_framework import generics, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -9,15 +7,25 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from django.db.models import Q
+from django.shortcuts import render
+
 from accounts.models import CustomUser
 from calls.models import CallRecord, Evaluation, EvaluationForm
 
 from .permissions import IsAdminOrSuperUser, IsExpertOrAdmin
-from .serializers import (CallRecordSerializer, CallRecordUploadSerializer,
-                          EvaluationCreateSerializer, EvaluationFormSerializer,
-                          EvaluationSerializer, PasswordChangeSerializer,
-                          UserCreateSerializer, UserDetailSerializer,
-                          UserListSerializer, UserUpdateSerializer)
+from .serializers import (
+    CallRecordSerializer,
+    CallRecordUploadSerializer,
+    EvaluationCreateSerializer,
+    EvaluationFormSerializer,
+    EvaluationSerializer,
+    PasswordChangeSerializer,
+    UserCreateSerializer,
+    UserDetailSerializer,
+    UserListSerializer,
+    UserUpdateSerializer,
+)
 
 
 class UserViewSet(viewsets.ModelViewSet):

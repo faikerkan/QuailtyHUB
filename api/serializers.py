@@ -1,7 +1,8 @@
 from decimal import Decimal
 
-from django.core.validators import FileExtensionValidator
 from rest_framework import serializers
+
+from django.core.validators import FileExtensionValidator
 
 from accounts.models import CustomUser
 from calls.models import CallRecord, Evaluation, EvaluationForm

@@ -1,14 +1,21 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import HttpResponseForbidden, HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.models import User
 
 try:
     from .forms import CallRecordForm, EvaluationCreateForm
-    from .models import CallQueue, CallRecord, Evaluation, EvaluationForm, Call, CallEvaluation
+    from .models import (
+        Call,
+        CallEvaluation,
+        CallQueue,
+        CallRecord,
+        Evaluation,
+        EvaluationForm,
+    )
 except ImportError:
     # Fallback for missing models/forms
     CallRecord = None
