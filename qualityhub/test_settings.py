@@ -30,4 +30,4 @@ LOGGING_CONFIG = None
 
 # Test-specific settings
 DEBUG = True
-SECRET_KEY = "test-secret-key-for-testing-only"
+SECRET_KEY = "test-secret-key-for-testing-only"  # nosec B105
