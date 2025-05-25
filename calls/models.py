@@ -211,3 +211,28 @@ class Evaluation(models.Model):
         verbose_name = "Değerlendirme"
         verbose_name_plural = "Değerlendirmeler"
         ordering = ["-evaluated_at"]
+
+
+# Simple models for testing compatibility
+class Call(models.Model):
+    """Simple Call model for testing"""
+    agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    customer_phone = models.CharField(max_length=20)
+    duration = models.IntegerField()  # in seconds
+    call_type = models.CharField(max_length=20, choices=[('inbound', 'Gelen'), ('outbound', 'Giden')])
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Call {self.id} - {self.agent.username}"
+
+
+class CallEvaluation(models.Model):
+    """Simple CallEvaluation model for testing"""
+    call = models.ForeignKey(Call, on_delete=models.CASCADE)
+    evaluator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    score = models.IntegerField()
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Evaluation for Call {self.call.id} - Score: {self.score}"

@@ -70,7 +70,7 @@ jobs:
 
     - name: Run tests with coverage
       run: |
-        coverage run --source='.' manage.py test
+        coverage run --source='.' manage.py test --settings=qualityhub.test_settings
         coverage xml
 
     - name: Upload coverage to Codecov
