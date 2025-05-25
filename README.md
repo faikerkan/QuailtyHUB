@@ -51,7 +51,7 @@ Git
 
 ```bash
 # 1. Projeyi klonlayın
-git clone https://github.com/your-username/CallQualityHub.git
+git clone https://github.com/faikerkan/CallQualityHub.git
 cd CallQualityHub
 
 # 2. Virtual environment oluşturun
@@ -254,7 +254,7 @@ docker-compose up -d
 
 ```bash
 # Heroku CLI kurulumu sonrası
-heroku create your-app-name
+heroku create callqualityhub
 heroku addons:create heroku-postgresql:hobby-dev
 heroku config:set DEBUG=False
 git push heroku main
@@ -313,7 +313,7 @@ Detaylı bilgi için [CONTRIBUTING.md](CONTRIBUTING.md) dosyasını okuyun.
 
 ### 🐛 Hata Bildirimi
 
-Hata bulduysanız lütfen [issue açın](https://github.com/your-username/CallQualityHub/issues) ve şunları belirtin:
+Hata bulduysanız lütfen [issue açın](https://github.com/faikerkan/CallQualityHub/issues) ve şunları belirtin:
 
 - Hatanın tanımı
 - Adım adım nasıl tekrarlanacağı
@@ -327,7 +327,7 @@ Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
 
 ## 👥 Takım
 
-- **Geliştirici**: [Your Name](https://github.com/your-username)
+- **Geliştirici**: [Faik Erkan Gürşen](https://github.com/faikerkan)
 - **Design**: Modern Glassmorphism UI/UX
 - **Backend**: Django REST Framework
 - **Frontend**: TailwindCSS + Vanilla JS
@@ -343,9 +343,9 @@ Bu projeyi mümkün kılan harika açık kaynak projelerine teşekkürler:
 
 ## 📞 İletişim
 
-- **Email**: your-email@example.com
-- **LinkedIn**: [Your LinkedIn](https://linkedin.com/in/your-profile)
-- **Twitter**: [@your-twitter](https://twitter.com/your-twitter)
+- **Email**: faikerkangursen@icloud.com
+- **LinkedIn**: [Faik Erkan Gürşen](https://www.linkedin.com/in/faikerkan/)
+- **GitHub**: [faikerkan](https://github.com/faikerkan)
 
 ---
 
@@ -353,6 +353,6 @@ Bu projeyi mümkün kılan harika açık kaynak projelerine teşekkürler:
 
 **⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!**
 
-Made with ❤️ by [Your Name](https://github.com/your-username)
+Made with ❤️ by [Faik Erkan](https://github.com/faikerkan)
 
 </div> 

@@ -19,7 +19,7 @@ Güvenlik açığı bulduysanız lütfen sorumlu bir şekilde bildirin:
 
 ### 🔒 Güvenli İletişim
 
-**E-posta**: security@callqualityhub.com  
+**E-posta**: faikerkangursen@icloud.com  
 **GPG Key**: [Buraya GPG key linkini ekleyin]
 
 ### 📝 Rapor İçeriği
@@ -112,7 +112,7 @@ semgrep --config=auto .
 
 ### 📞 Acil Durum Prosedürü
 
-1. **Hemen Bildirin**: security@callqualityhub.com
+1. **Hemen Bildirin**: faikerkangursen@icloud.com
 2. **Sistemi İzole Edin**: Etkilenen sistemi offline alın
 3. **Kanıtları Koruyun**: Log dosyalarını yedekleyin
 4. **Kullanıcıları Bilgilendirin**: Şeffaf iletişim kurun
@@ -160,9 +160,9 @@ Güvenlik araştırmacıları için:
 
 ## 📞 İletişim
 
-**Güvenlik Ekibi**: security@callqualityhub.com  
-**Genel Sorular**: info@callqualityhub.com  
-**Documentation**: [Wiki](https://github.com/your-org/callqualityhub/wiki/security)
+**Güvenlik Ekibi**: faikerkangursen@icloud.com  
+**Genel Sorular**: faikerkangursen@icloud.com  
+**Documentation**: [Wiki](https://github.com/faikerkan/CallQualityHub/wiki/security)
 
 ---
 

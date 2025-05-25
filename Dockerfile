@@ -5,7 +5,7 @@
 FROM python:3.11-slim as base
 
 # Metadata
-LABEL maintainer="your-email@example.com"
+LABEL maintainer="faikerkangursen@icloud.com"
 LABEL description="CallQualityHub - Premium Call Quality Management System"
 LABEL version="1.0.0"
 
