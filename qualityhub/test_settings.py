@@ -8,17 +8,8 @@ DATABASES = {
     }
 }
 
-
-# Disable migrations for faster testing
-class DisableMigrations:
-    def __contains__(self, item):
-        return True
-
-    def __getitem__(self, item):
-        return None
-
-
-MIGRATION_MODULES = DisableMigrations()
+# Enable all migrations for proper test database setup
+# No MIGRATION_MODULES override - let Django handle all migrations
 
 # Faster password hashing for tests
 PASSWORD_HASHERS = [
@@ -31,3 +22,10 @@ LOGGING_CONFIG = None
 # Test-specific settings
 DEBUG = True
 SECRET_KEY = "test-secret-key-for-testing-only"  # nosec B105
+
+# Disable caching
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+    }
+}
